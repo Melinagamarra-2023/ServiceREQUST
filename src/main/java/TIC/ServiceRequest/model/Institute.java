@@ -5,26 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="directors")
-public class Director {
+@Table(name="institutes")
+public class Institute {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
 
     @Column(unique = true)
-    private String cuit;
+    String cuise;
 
-    @ManyToOne
-    private Institute institute;
-
-    private String name;
-    private String lastname;
-    private String phone;
-    private String mail;
-    private Boolean enabled;
+    String domain;
+    String phone;
+    String mail;
+    Boolean enabled;
 }

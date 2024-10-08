@@ -19,6 +19,9 @@ public class Technician {
     @Column(unique = true)
     String cuit;
 
+    @ManyToOne
+    private Institute institute;
+
     String name;
     String lastname;
     String phone;
