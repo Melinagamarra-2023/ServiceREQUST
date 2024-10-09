@@ -1,12 +1,13 @@
 package TIC.ServiceRequest.service;
 
-import TIC.ServiceRequest.dto.RequestTech;
+import TIC.ServiceRequest.dto.TechRequest;
+import TIC.ServiceRequest.model.TechSupport;
 
 import java.util.GregorianCalendar;
 
 public interface TechSupportService {
 
-    void requestService(RequestTech requestTech);
+    TechSupport requestService(TechRequest requestTech);
     void scheduleService(GregorianCalendar date, Long id);
     void acceptTechnician(String code);
     void acceptDirector(String code);

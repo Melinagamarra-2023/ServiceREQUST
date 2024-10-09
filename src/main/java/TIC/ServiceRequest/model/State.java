@@ -7,7 +7,7 @@ public enum State {
     SOLICITADO("Solicitado"),
     AGENDADO("Agendado"),
     PRESENTE("Presente"),
-    TERMINADO("TERMINADO"),
+    TERMINADO("Terminado"),
     CANCELADO("Cancelado"),
     ;
     String name;
