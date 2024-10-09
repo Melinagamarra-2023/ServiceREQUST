@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 @AllArgsConstructor
 @Table(name="tech_support")
 public class TechSupport {
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     long id;
@@ -23,7 +24,7 @@ public class TechSupport {
     @ManyToOne
     private Institute institute;
     private GregorianCalendar date;
-    private ServiceType type;
+    private SupportType type;
 
 
 
