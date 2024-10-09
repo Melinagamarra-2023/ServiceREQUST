@@ -10,6 +10,6 @@ public interface TechSupportService {
     void scheduleService(GregorianCalendar date, Long id);
     void acceptTechnician(String code);
     void acceptDirector(String code);
-
+    void cenceledService(String code);
 
 }

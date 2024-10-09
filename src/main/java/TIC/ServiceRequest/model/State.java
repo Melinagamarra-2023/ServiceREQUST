@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 public enum State {
     SOLICITADO("Solicitado"),
     AGENDADO("Agendado"),
-    CONFIRMADO("Confirmado"),
-    COMPLETO("Completo"),
+    PRESENTE("Presente"),
+    TERMINADO("TERMINADO"),
     CANCELADO("Cancelado"),
     ;
     String name;

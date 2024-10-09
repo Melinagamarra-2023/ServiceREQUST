@@ -1,7 +1,6 @@
 package TIC.ServiceRequest.dto;
 
 import TIC.ServiceRequest.model.Institute;
-import TIC.ServiceRequest.model.ServiceType;
 import TIC.ServiceRequest.model.State;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

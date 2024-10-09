@@ -1,9 +1,9 @@
 package TIC.ServiceRequest.service.Impl;
 
 import TIC.ServiceRequest.dto.RequestTech;
+import TIC.ServiceRequest.model.State;
 import TIC.ServiceRequest.model.TechSupport;
 import TIC.ServiceRequest.repository.TechSupportRepository;
-import TIC.ServiceRequest.repository.TechnicianRepository;
 import TIC.ServiceRequest.service.TechSupportService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.GregorianCalendar;
+
+import static TIC.ServiceRequest.constant.Constant.*;
 
 @Service
 @Slf4j
@@ -27,9 +29,10 @@ public class TechSupportServiceImpl implements TechSupportService {
         TechSupport techSupport = toEntity(requestTech);
         try {
             repository.save(techSupport);
-            logger.info("El servicio fue solicitado con éxito: {}", techSupport.getCode());
+            logger.info(SUCCESSFULLY_MESSAGE +"{}" , techSupport.getCode());
         } catch (Exception e) {
-            logger.error("No se ha podido solicitar el servicio. Error: {}", e.getMessage());
+            logger.error(ERROR_MESAAGE+"{}",e.getMessage());
+
         }
     }
 
@@ -39,22 +42,48 @@ public class TechSupportServiceImpl implements TechSupportService {
            TechSupport techSupport = repository.findById(id).orElseThrow();
            techSupport.setDate(date);
            repository.save(techSupport);
-           logger.info("El servicio fue agendado con exito: {} ", techSupport.getCode());
+           logger.info(SUCCESSFULLY_MESSAGE_SCHEDULE +"{} ", techSupport.getCode());
        } catch (Exception e) {
-           logger.error("No se pudo agendar el servicio. Error: {}", e.getMessage());
+           logger.error(ERROR_MESAAGE_SCHEDULE+" {}", e.getMessage());
        }
 
     }
 
     @Override
     public void acceptTechnician(String code) {
-        
+    try {
+        TechSupport techSupport = repository.findByCode(code);
+        techSupport.setState(State.PRESENTE);
+        repository.save(techSupport);
+        logger.info(PRESENCE_CONFIRMATION_MESSAGE +"{}",techSupport.getState());
+    } catch (Exception e) {
+       logger.error(PRESENCE_ERROR_MESSAGE);
+    }
 
     }
 
     @Override
     public void acceptDirector(String code) {
+        try {
+           TechSupport techSupport = repository.findByCode(code);
+           techSupport.setState(State.TERMINADO);
+           repository.save(techSupport);
+           logger.info(JOB_CONFIRMATION_MESSAGE+"{}", techSupport.getState());
+        } catch (Exception e) {
+            logger.info(JOB_ERROR_MESSAGE);
+        }
+    }
 
+    @Override
+    public void cenceledService(String code) {
+        try {
+            TechSupport techSupport = repository.findByCode(code);
+            techSupport.setState(State.CANCELADO);
+            repository.save(techSupport);
+            logger.info(JOB_CANCELED+ "{}",techSupport.getState());
+        } catch (Exception e) {
+            logger.error(JOB_ERROR_CANCELED);
+        }
     }
 
 
