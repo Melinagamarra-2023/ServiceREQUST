@@ -1,14 +1,17 @@
 package TIC.ServiceRequest.service.Impl;
 
+import TIC.ServiceRequest.dto.DirectorDTO;
 import TIC.ServiceRequest.dto.TechRequest;
-import TIC.ServiceRequest.model.State;
-import TIC.ServiceRequest.model.TechSupport;
+import TIC.ServiceRequest.dto.TechResponse;
+import TIC.ServiceRequest.model.*;
+import TIC.ServiceRequest.repository.InstituteRepository;
 import TIC.ServiceRequest.repository.TechSupportRepository;
 import TIC.ServiceRequest.service.TechSupportService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.GregorianCalendar;
 
@@ -18,24 +21,47 @@ import static TIC.ServiceRequest.constant.Constant.*;
 @Slf4j
 public class TechSupportServiceImpl implements TechSupportService {
     private final TechSupportRepository repository;
+    private final InstituteRepository instituteRepository;
     protected static final Logger logger = LoggerFactory.getLogger(TechSupportServiceImpl.class);
 
-    public TechSupportServiceImpl(TechSupportRepository repository) {
+    public TechSupportServiceImpl(TechSupportRepository repository, InstituteRepository instituteRepository) {
         this.repository = repository;
+        this.instituteRepository = instituteRepository;
     }
 
     @Override
-    public TechSupport requestService(TechRequest requestTech) {
+    @Transactional
+    public TechResponse requestService(TechRequest requestTech) {
+        TechResponse response = new TechResponse();
         TechSupport techSupport = toEntity(requestTech);
+        Institute institute = instituteRepository.findByCuise(requestTech.getInstitute().getCuise());
+        if (institute == null) {
+            logger.error("No hay ningun instituto cerado asociado a CUISE ingresado: {}", requestTech.getInstitute().getCuise());
+            return response;
+        }
+
+        SupportType supportType = null;
+        for (SupportType sp : SupportType.values()) {
+            if (sp.name().equals(requestTech.getType())) {
+                supportType = sp;
+
+            }
+        }
+        if (supportType == null) {
+            logger.error("El servicio solicitado, no se ha encontrado: {}", requestTech.getType());
+            return response;
+        }
+
         try {
+            techSupport.setInstitute(institute);
+            techSupport.setType(supportType);
             techSupport.setState(State.SOLICITADO);
-            repository.save(techSupport);
+            response = toDTO(repository.save(techSupport));
             logger.info(SUCCESSFULLY_MESSAGE +"{}" , techSupport.getCode());
         } catch (Exception e) {
-            logger.error(ERROR_MESSAGE+"{}",e.getMessage());
-
+            logger.error(ERROR_MESSAGE + "{}", e.getMessage());
         }
-        return techSupport;
+        return response;
     }
 
     @Override
@@ -90,12 +116,21 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
 
-    private TechSupport toEntity(TechRequest requestTech) {
-        TechSupport newTech = new TechSupport();
-        newTech.setCode(requestTech.getCode());
-        newTech.setDate(requestTech.getDate());
-        newTech.setInstitute(requestTech.getInstitute());
-        newTech.setState(requestTech.getState());
+    private TechSupport toEntity(TechRequest techRequest) {
+       TechSupport techSupport = new TechSupport();
+      techSupport.setCode(techRequest.getCode());
+      techSupport.setInstitute(techRequest.getInstitute());
+
+        return techSupport;
+    }
+
+    private TechResponse toDTO(TechSupport techSupport) {
+        TechResponse newTech = new TechResponse();
+        newTech.setCode(techSupport.getCode());
+        newTech.setDate(techSupport.getDate() != null? techSupport.getDate().toString() : "Todavía no se ha agendado");
+        newTech.setInstitute(techSupport.getInstitute());
+        newTech.setState(techSupport.getState().name());
+        newTech.setType(techSupport.getType().name());
         return newTech;
     }
 }

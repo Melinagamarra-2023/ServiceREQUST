@@ -6,6 +6,7 @@ package TIC.ServiceRequest.dto;
 import TIC.ServiceRequest.model.Institute;
 import TIC.ServiceRequest.model.State;
 
+import TIC.ServiceRequest.model.SupportType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -27,9 +28,7 @@ public class TechRequest {
     long id;
 
     private String code;
-    private State state;
     private Institute institute;
-    private GregorianCalendar date;
-    private SupportType type;
+   private String type;
 
 }
