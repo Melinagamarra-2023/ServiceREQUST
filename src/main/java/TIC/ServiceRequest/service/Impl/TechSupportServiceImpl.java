@@ -1,6 +1,6 @@
 package TIC.ServiceRequest.service.Impl;
 
-import TIC.ServiceRequest.dto.RequestTech;
+import TIC.ServiceRequest.dto.TechRequest;
 import TIC.ServiceRequest.model.State;
 import TIC.ServiceRequest.model.TechSupport;
 import TIC.ServiceRequest.repository.TechSupportRepository;
@@ -25,7 +25,7 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
     @Override
-    public void requestService(RequestTech requestTech) {
+    public void requestService(TechRequest requestTech) {
         TechSupport techSupport = toEntity(requestTech);
         try {
             repository.save(techSupport);
@@ -87,7 +87,7 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
 
-    private TechSupport toEntity(RequestTech requestTech) {
+    private TechSupport toEntity(TechRequest requestTech) {
         TechSupport newTech = new TechSupport();
         newTech.setCode(requestTech.getCode());
         newTech.setDate(requestTech.getDate());

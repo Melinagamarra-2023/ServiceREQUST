@@ -20,12 +20,12 @@ public class TechSupport {
 
     @Column (unique = true)
     private String code;
-    private State state;
+
     @ManyToOne
     private Institute institute;
+
+    private State state;
     private GregorianCalendar date;
     private SupportType type;
-
-
-
+    
 }

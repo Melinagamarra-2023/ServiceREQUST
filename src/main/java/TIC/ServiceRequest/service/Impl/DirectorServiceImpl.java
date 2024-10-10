@@ -29,11 +29,11 @@ public class DirectorServiceImpl implements DirectorService {
         try {
             Director newDirector = toEntity(directorDTO);
             repository.save(newDirector);
-            String info = "El servicio fue solicitado con éxito: " + newDirector.getCuit();
+            String info = "El director ha sido guardado con éxito: " + newDirector.getCuit();
             logger.info(info);
             return info;
         } catch (Exception e) {
-            String error = "No se ha podido solicitar el servicio. Error: " + e.getMessage();
+            String error = "No se ha podido guardar el directivo. Error: " + e.getMessage();
             logger.error(error);
             return error;
         }

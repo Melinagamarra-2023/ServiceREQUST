@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestTech {
+public class TechRequest {
     @JsonIgnore
     long id;
     private String code;
