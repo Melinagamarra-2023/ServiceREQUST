@@ -23,7 +23,7 @@ public class TechSupport {
 
     @ManyToOne
     private Institute institute;
-
+  
     private State state;
     private GregorianCalendar date;
     private SupportType type;

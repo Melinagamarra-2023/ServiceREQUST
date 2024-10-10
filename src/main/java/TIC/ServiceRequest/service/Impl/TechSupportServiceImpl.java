@@ -25,15 +25,17 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
     @Override
-    public void requestService(TechRequest requestTech) {
+    public TechSupport requestService(TechRequest requestTech) {
         TechSupport techSupport = toEntity(requestTech);
         try {
+            techSupport.setState(State.SOLICITADO);
             repository.save(techSupport);
             logger.info(SUCCESSFULLY_MESSAGE +"{}" , techSupport.getCode());
         } catch (Exception e) {
-            logger.error(ERROR_MESAAGE+"{}",e.getMessage());
+            logger.error(ERROR_MESSAGE+"{}",e.getMessage());
 
         }
+        return techSupport;
     }
 
     @Override
@@ -41,10 +43,11 @@ public class TechSupportServiceImpl implements TechSupportService {
        try {
            TechSupport techSupport = repository.findById(id).orElseThrow();
            techSupport.setDate(date);
+           techSupport.setState(State.AGENDADO);
            repository.save(techSupport);
            logger.info(SUCCESSFULLY_MESSAGE_SCHEDULE +"{} ", techSupport.getCode());
        } catch (Exception e) {
-           logger.error(ERROR_MESAAGE_SCHEDULE+" {}", e.getMessage());
+           logger.error(ERROR_MESSAGE_SCHEDULE+" {}", e.getMessage());
        }
 
     }
@@ -91,7 +94,6 @@ public class TechSupportServiceImpl implements TechSupportService {
         TechSupport newTech = new TechSupport();
         newTech.setCode(requestTech.getCode());
         newTech.setDate(requestTech.getDate());
-        newTech.setType(requestTech.getType());
         newTech.setInstitute(requestTech.getInstitute());
         newTech.setState(requestTech.getState());
         return newTech;
