@@ -1,5 +1,6 @@
 package TIC.ServiceRequest.service.impl;
 
+
 import TIC.ServiceRequest.model.Institute;
 import jakarta.persistence.*;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import static TIC.ServiceRequest.constant.Constant.*;
 import java.util.List;
 import java.util.ArrayList;
 
+
 @Service
 @Slf4j
 public class DirectorServiceImpl implements DirectorService {
@@ -27,7 +29,7 @@ public class DirectorServiceImpl implements DirectorService {
         repository = directorRepository;
     }
 
-    @Override
+
     public DirectorDTO save(DirectorDTO director) throws DataAccessException {
         try {
             Director newDirector = toEntity(director);
@@ -37,11 +39,13 @@ public class DirectorServiceImpl implements DirectorService {
             logger.error("No se ha podido guardar el directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
         return null;
+
     }
 
     @Override
     public DirectorDTO readOne(Long id) throws DataAccessException {
         try {
+
             logger.info("Buscando directivo bajo el ID: {}", id);
             return toDTO(repository.findById(id).orElseThrow());
         } catch (Exception e) {
@@ -57,12 +61,14 @@ public class DirectorServiceImpl implements DirectorService {
                     .filter(director -> director.getCuit().equals(cuit)).findFirst().orElseThrow());
         } catch (Exception e) {
             searchError(e);
+
         }
         return null;
     }
 
     @Override
     public List<DirectorDTO> readAll() throws DataAccessException {
+
         try {
             List<DirectorDTO> response = new ArrayList<>();
             logger.info("Buscando todos los directivos");
@@ -102,6 +108,7 @@ public class DirectorServiceImpl implements DirectorService {
         } catch (Exception e) {
             logger.error("No se ha podido eliminar al directivo {}. Error {}", director.getCuit(), e.getMessage());
         }
+
     }
 
     @Override
@@ -131,6 +138,7 @@ public class DirectorServiceImpl implements DirectorService {
         dto.setEnabled(director.getEnabled());
         return dto;
     }
+
 
     private void searchError(Exception e){
         logger.error(ERROR_SEARCH+" {}", e.getMessage());

@@ -4,12 +4,13 @@ import TIC.ServiceRequest.dto.TechRequest;
 import TIC.ServiceRequest.model.TechSupport;
 import TIC.ServiceRequest.service.impl.TechSupportServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @Slf4j
@@ -23,8 +24,9 @@ public class techSupportController {
     }
 
     @PostMapping("/support")
-    public TechSupport createSupport(@RequestBody TechRequest techRequest){
-         TechSupport support =service.requestService(techRequest);
-        return support ;
+    public ResponseEntity<TechSupport> createSupport(@RequestBody TechRequest techRequest){
+        return new ResponseEntity(this.service.requestService(techRequest), HttpStatus.CREATED);
     }
+
+
 }

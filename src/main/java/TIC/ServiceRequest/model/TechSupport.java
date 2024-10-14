@@ -22,6 +22,7 @@ public class TechSupport {
     private String code;
 
     @ManyToOne
+    @JoinColumn(name = "institute_id")
     private Institute institute;
   
     private State state;
