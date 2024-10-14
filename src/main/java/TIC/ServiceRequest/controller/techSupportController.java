@@ -2,7 +2,7 @@ package TIC.ServiceRequest.controller;
 
 import TIC.ServiceRequest.dto.TechRequest;
 import TIC.ServiceRequest.model.TechSupport;
-import TIC.ServiceRequest.service.Impl.TechSupportServiceImpl;
+import TIC.ServiceRequest.service.impl.TechSupportServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;

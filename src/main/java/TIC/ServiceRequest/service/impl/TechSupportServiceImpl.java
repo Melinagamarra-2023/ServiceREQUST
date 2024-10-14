@@ -1,4 +1,4 @@
-package TIC.ServiceRequest.service.Impl;
+package TIC.ServiceRequest.service.impl;
 
 import TIC.ServiceRequest.dto.TechRequest;
 import TIC.ServiceRequest.dto.TechResponse;

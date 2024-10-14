@@ -1,4 +1,4 @@
-package TIC.ServiceRequest.service.Impl;
+package TIC.ServiceRequest.service.impl;
 
 import TIC.ServiceRequest.dto.DirectorDTO;
 import TIC.ServiceRequest.model.Director;
