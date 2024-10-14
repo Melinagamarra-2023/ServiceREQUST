@@ -1,8 +1,5 @@
 package TIC.ServiceRequest.service.impl;
 
-
-import TIC.ServiceRequest.model.Institute;
-import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +9,11 @@ import org.springframework.stereotype.Service;
 import TIC.ServiceRequest.service.DirectorService;
 import org.springframework.dao.DataAccessException;
 import TIC.ServiceRequest.repository.DirectorRepository;
+
 import static TIC.ServiceRequest.constant.Constant.*;
 
 import java.util.List;
 import java.util.ArrayList;
-
 
 @Service
 @Slf4j
@@ -96,6 +93,7 @@ public class DirectorServiceImpl implements DirectorService {
         } catch (Exception e) {
             logger.error("No se ha podido actulizar al directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
+        return null;
     }
 
     @Override
@@ -108,7 +106,7 @@ public class DirectorServiceImpl implements DirectorService {
         } catch (Exception e) {
             logger.error("No se ha podido eliminar al directivo {}. Error {}", director.getCuit(), e.getMessage());
         }
-
+        return null;
     }
 
     @Override
