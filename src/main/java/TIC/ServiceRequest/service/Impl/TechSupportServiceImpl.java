@@ -1,6 +1,5 @@
 package TIC.ServiceRequest.service.Impl;
 
-import TIC.ServiceRequest.dto.DirectorDTO;
 import TIC.ServiceRequest.dto.TechRequest;
 import TIC.ServiceRequest.dto.TechResponse;
 import TIC.ServiceRequest.model.*;
