@@ -17,16 +17,19 @@ import java.net.URISyntaxException;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/directors")
+@RequestMapping(DirectorController.RESOURCE)
 public class DirectorController {
+
+    public static final String ID = "/{cuit}";
+    public static final String RESOURCE = "/api/directors";
+    private static final Logger logger = LoggerFactory.getLogger(DirectorController.class);
     private final DirectorServiceImpl service;
-    protected static final Logger logger = LoggerFactory.getLogger(DirectorController.class);
 
     public DirectorController(DirectorServiceImpl directorService) {
         this.service = directorService;
     }
 
-    @PostMapping("/director")
+    @PostMapping(value = "")
     public ResponseEntity<DirectorDTO> create(@RequestBody DirectorDTO request) throws URISyntaxException {
         logger.info("Creating new director : {}", request);
         DirectorDTO response;
@@ -37,12 +40,12 @@ public class DirectorController {
             return ResponseEntity.badRequest().headers(headers).body(request);
         }
         response = this.service.save(request);
-        URI uri = new URI("/api/directors/director/" + response.getId());
+        URI uri = new URI("/api/directors/" + response.getId());
         headers.setLocation(uri);
         return ResponseEntity.ok().headers(headers).body(response);
     }
 
-    @GetMapping("/director")
+    @GetMapping(value = ID)
     public ResponseEntity<DirectorDTO> readOne(@PathVariable(value = "cuit") String cuit) {
         logger.info("Get director: {}", cuit);
         DirectorDTO response = service.readByCuit(cuit);
@@ -52,7 +55,7 @@ public class DirectorController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping(value = "")
     public ResponseEntity<List<DirectorDTO>> readAll() {
         logger.info("Get all directors");
         List<DirectorDTO> response = new ArrayList<>(service.readAll());
@@ -65,6 +68,7 @@ public class DirectorController {
         }
     }
 
+    @PutMapping(value = ID)
     public ResponseEntity<DirectorDTO> update(@PathVariable(value = "cuit") String directorCuit,
                                            @RequestBody DirectorDTO newDirector) {
         logger.info("Update director with cuit {}", directorCuit);
@@ -76,6 +80,7 @@ public class DirectorController {
         return new ResponseEntity<>(service.readByCuit(directorCuit), HttpStatus.OK);
     }
 
+    @PutMapping(value = ID)
     public ResponseEntity<Void> delete(@PathVariable(value = "cuit") String directorCuit) {
         logger.info("Delete director with cuit {}", directorCuit);
         DirectorDTO delDirector = service.readByCuit(directorCuit);
