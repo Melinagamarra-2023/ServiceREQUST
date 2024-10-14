@@ -1,17 +1,22 @@
 package TIC.ServiceRequest.service.impl;
 
-import TIC.ServiceRequest.dto.DirectorDTO;
-import TIC.ServiceRequest.model.Director;
-import TIC.ServiceRequest.service.DirectorService;
-import TIC.ServiceRequest.repository.DirectorRepository;
+
+import TIC.ServiceRequest.model.Institute;
+import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
+import TIC.ServiceRequest.model.Director;
+import TIC.ServiceRequest.dto.DirectorDTO;
 import org.springframework.stereotype.Service;
+import TIC.ServiceRequest.service.DirectorService;
 import org.springframework.dao.DataAccessException;
+import TIC.ServiceRequest.repository.DirectorRepository;
+import static TIC.ServiceRequest.constant.Constant.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+
 
 @Service
 @Slf4j
@@ -24,43 +29,86 @@ public class DirectorServiceImpl implements DirectorService {
         repository = directorRepository;
     }
 
-    @Override
-    public String save(DirectorDTO directorDTO) throws DataAccessException {
+
+    public DirectorDTO save(DirectorDTO director) throws DataAccessException {
         try {
-            Director newDirector = toEntity(directorDTO);
-            repository.save(newDirector);
-            String info = "El director ha sido guardado con éxito: " + newDirector.getCuit();
-            logger.info(info);
-            return info;
+            Director newDirector = toEntity(director);
+            logger.info("Guardando al directivo: {}", newDirector.getCuit());
+            return toDTO(repository.save(newDirector));
         } catch (Exception e) {
-            String error = "No se ha podido guardar el directivo. Error: " + e.getMessage();
-            logger.error(error);
-            return error;
+            logger.error("No se ha podido guardar el directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
+        return null;
+
     }
 
     @Override
     public DirectorDTO readOne(Long id) throws DataAccessException {
         try {
+
+            logger.info("Buscando directivo bajo el ID: {}", id);
             return toDTO(repository.findById(id).orElseThrow());
         } catch (Exception e) {
-            logger.error("No se ha encontrado el directivo buscado. Error: {}", e.getMessage());
+            searchError(e);
+        }
+        return null;
+    }
+
+    public DirectorDTO readByCuit(String cuit) throws DataAccessException {
+        try {
+            logger.info("Buscando directivo bajo el CUIT: {}", cuit);
+            return toDTO(repository.findAll().stream()
+                    .filter(director -> director.getCuit().equals(cuit)).findFirst().orElseThrow());
+        } catch (Exception e) {
+            searchError(e);
+
         }
         return null;
     }
 
     @Override
     public List<DirectorDTO> readAll() throws DataAccessException {
-        List<DirectorDTO> beReturned = new ArrayList<>();
+
         try {
+            List<DirectorDTO> response = new ArrayList<>();
+            logger.info("Buscando todos los directivos");
             for (Director director : repository.findAll()){
-                beReturned.add(toDTO(director));
+                response.add(toDTO(director));
             }
-            return beReturned;
+            return response;
         } catch (Exception e) {
             logger.error("Error: {}", e.getMessage());
         }
-        return beReturned;
+        return new ArrayList<>();
+    }
+
+    @Override
+    public DirectorDTO update(DirectorDTO director) {
+        try {
+            logger.info("Actualizando directivo bajo el CUIT: {}", director.getCuit());
+            Director oldDirector = toEntity(readOne(director.getId()));
+            Director newDirector = toEntity(director);
+            oldDirector.setName(newDirector.getName());
+            oldDirector.setLastname(newDirector.getLastname());
+            oldDirector.setPhone(newDirector.getPhone());
+            oldDirector.setMail(newDirector.getMail());
+            return toDTO(repository.save(newDirector));
+        } catch (Exception e) {
+            logger.error("No se ha podido actulizar al directivo {}. Error: {}", director.getCuit(), e.getMessage());
+        }
+    }
+
+    @Override
+    public DirectorDTO delete(DirectorDTO director) {
+        try {
+            logger.info("Eliminando al directivo bajo el CUIT: {}", director.getCuit());
+            Director delDirector = toEntity(director);
+            delDirector.setEnabled(false);
+            return toDTO(repository.save(delDirector));
+        } catch (Exception e) {
+            logger.error("No se ha podido eliminar al directivo {}. Error {}", director.getCuit(), e.getMessage());
+        }
+
     }
 
     @Override
@@ -89,6 +137,11 @@ public class DirectorServiceImpl implements DirectorService {
         dto.setMail(director.getMail());
         dto.setEnabled(director.getEnabled());
         return dto;
+    }
+
+
+    private void searchError(Exception e){
+        logger.error(ERROR_SEARCH+" {}", e.getMessage());
     }
 
 }

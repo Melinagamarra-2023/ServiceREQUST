@@ -1,5 +1,6 @@
 package TIC.ServiceRequest.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import TIC.ServiceRequest.model.Institute;
@@ -15,6 +16,8 @@ public class DirectorDTO {
     private String lastname;
     private String phone;
     private String mail;
+
+    @JsonIgnore
     private Boolean enabled;
 
 }

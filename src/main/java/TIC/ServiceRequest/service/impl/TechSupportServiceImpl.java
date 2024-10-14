@@ -11,15 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.GregorianCalendar;
-
 import static TIC.ServiceRequest.constant.Constant.*;
 
 @Service
 @Slf4j
 public class TechSupportServiceImpl implements TechSupportService {
     private final TechSupportRepository repository;
+
     private final InstituteRepository instituteRepository;
     protected static final Logger logger = LoggerFactory.getLogger(TechSupportServiceImpl.class);
 
@@ -61,6 +60,8 @@ public class TechSupportServiceImpl implements TechSupportService {
             logger.error(ERROR_MESSAGE + "{}", e.getMessage());
         }
         return response;
+
+   
     }
 
     @Override
@@ -113,6 +114,7 @@ public class TechSupportServiceImpl implements TechSupportService {
             logger.error(JOB_ERROR_CANCELED);
         }
     }
+
 
 
     private TechSupport toEntity(TechRequest techRequest) {
