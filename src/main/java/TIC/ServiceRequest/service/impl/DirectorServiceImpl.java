@@ -31,18 +31,17 @@ public class DirectorServiceImpl implements DirectorService {
         try {
             Director newDirector = toEntity(director);
             logger.info("Guardando al directivo: {}", newDirector.getCuit());
+            newDirector.setEnabled(true);
             return toDTO(repository.save(newDirector));
         } catch (Exception e) {
             logger.error("No se ha podido guardar el directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
         return null;
-
     }
 
     @Override
     public DirectorDTO readOne(Long id) throws DataAccessException {
         try {
-
             logger.info("Buscando directivo bajo el ID: {}", id);
             return toDTO(repository.findById(id).orElseThrow());
         } catch (Exception e) {
@@ -83,13 +82,13 @@ public class DirectorServiceImpl implements DirectorService {
     public DirectorDTO update(DirectorDTO director) {
         try {
             logger.info("Actualizando directivo bajo el CUIT: {}", director.getCuit());
-            Director oldDirector = toEntity(readOne(director.getId()));
+            Director oldDirector = toEntity(readByCuit(director.getCuit()));
             Director newDirector = toEntity(director);
             oldDirector.setName(newDirector.getName());
             oldDirector.setLastname(newDirector.getLastname());
             oldDirector.setPhone(newDirector.getPhone());
             oldDirector.setMail(newDirector.getMail());
-            return toDTO(repository.save(newDirector));
+            return toDTO(repository.save(oldDirector));
         } catch (Exception e) {
             logger.error("No se ha podido actulizar al directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
