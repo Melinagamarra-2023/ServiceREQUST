@@ -29,7 +29,7 @@ public class DirectorController {
         this.service = directorService;
     }
 
-    @PutMapping(value = "")
+    @PostMapping(value = "")
     public ResponseEntity<DirectorDTO> create(@RequestBody DirectorDTO request) throws URISyntaxException {
         logger.info("Creating new director: {}", request);
         DirectorDTO response;
@@ -72,7 +72,7 @@ public class DirectorController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping(value = ID)
+    @PutMapping(value = ID)
     public ResponseEntity<DirectorDTO> update(@PathVariable(value = "cuit") String directorCuit,
                                               @RequestBody DirectorDTO newDirector) {
         logger.info("Update director with cuit {}", directorCuit);
