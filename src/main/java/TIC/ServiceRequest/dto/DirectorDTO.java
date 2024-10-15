@@ -9,7 +9,9 @@ import TIC.ServiceRequest.model.Institute;
 @NoArgsConstructor
 public class DirectorDTO {
 
+    @JsonIgnore
     Long id;
+
     private String cuit;
     private Institute institute;
     private String name;

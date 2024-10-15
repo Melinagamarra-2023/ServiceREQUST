@@ -29,19 +29,20 @@ public class DirectorController {
         this.service = directorService;
     }
 
-    @PostMapping(value = "")
+    @PutMapping(value = "")
     public ResponseEntity<DirectorDTO> create(@RequestBody DirectorDTO request) throws URISyntaxException {
-        logger.info("Creating new director : {}", request);
+        logger.info("Creating new director: {}", request);
         DirectorDTO response;
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Responded", "DirectorController");
-        if (request.getId() != null) {
-            headers.add("ERROR", "ID is not null");
+        if (service.readByCuit(request.getCuit()) != null) {
+            headers.add("ERROR", "Director with cuit " + request.getCuit() + "already exist");
+            logger.info("Creating new director - error");
             return ResponseEntity.badRequest().headers(headers).body(request);
         }
         response = this.service.save(request);
-        URI uri = new URI("/api/directors/" + response.getId());
+        URI uri = new URI("/api/directors/" + response.getCuit());
         headers.setLocation(uri);
+        logger.info("Director created");
         return ResponseEntity.ok().headers(headers).body(response);
     }
 
@@ -50,8 +51,10 @@ public class DirectorController {
         logger.info("Get director: {}", cuit);
         DirectorDTO response = service.readByCuit(cuit);
         if (response == null) {
+            logger.info("Search director - error");
             return ResponseEntity.badRequest().headers(notFound(cuit)).body(null);
         }
+        logger.info("Director found");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -62,33 +65,38 @@ public class DirectorController {
         HttpHeaders headers = new HttpHeaders();
         if (response.isEmpty()) {
             headers.add("NOT_FOUND", "There are no directors in the database");
+            logger.info("Search directors - error");
             return ResponseEntity.badRequest().headers(headers).body(null);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
         }
+        logger.info("Directors found");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping(value = ID)
+    @PostMapping(value = ID)
     public ResponseEntity<DirectorDTO> update(@PathVariable(value = "cuit") String directorCuit,
-                                           @RequestBody DirectorDTO newDirector) {
+                                              @RequestBody DirectorDTO newDirector) {
         logger.info("Update director with cuit {}", directorCuit);
         DirectorDTO oldDirector = service.readByCuit(directorCuit);
         if (oldDirector == null) {
+            logger.info("Update director - error");
             return ResponseEntity.badRequest().headers(notFound(directorCuit)).body(null);
         }
         service.update(newDirector);
+        logger.info("Director updated");
         return new ResponseEntity<>(service.readByCuit(directorCuit), HttpStatus.OK);
     }
 
-    @PutMapping(value = ID)
-    public ResponseEntity<Void> delete(@PathVariable(value = "cuit") String directorCuit) {
+    @DeleteMapping(value = ID)
+    public ResponseEntity<DirectorDTO> delete(@PathVariable(value = "cuit") String directorCuit) {
         logger.info("Delete director with cuit {}", directorCuit);
         DirectorDTO delDirector = service.readByCuit(directorCuit);
         if (delDirector == null) {
+            logger.info("Delete director - error");
             return ResponseEntity.badRequest().headers(notFound(directorCuit)).body(null);
         }
         service.delete(delDirector);
-        return new ResponseEntity<>(HttpStatus.OK);
+        logger.info("Director deleted");
+        return new ResponseEntity<>(service.readByCuit(directorCuit), HttpStatus.OK);
     }
 
     private HttpHeaders notFound(String cuit) {
