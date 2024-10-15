@@ -87,16 +87,37 @@ public class DirectorController {
     }
 
     @DeleteMapping(value = ID)
-    public ResponseEntity<DirectorDTO> delete(@PathVariable(value = "cuit") String directorCuit) {
-        logger.info("Delete director with cuit {}", directorCuit);
-        DirectorDTO delDirector = service.readByCuit(directorCuit);
-        if (delDirector == null) {
-            logger.info("Delete director - error");
-            return ResponseEntity.badRequest().headers(notFound(directorCuit)).body(null);
+    public ResponseEntity<DirectorDTO> disable(@PathVariable(value = "cuit") String cuit) {
+        logger.info("Disabling director with cuit {}", cuit);
+        DirectorDTO dto = service.readByCuit(cuit);
+        if (dto == null) {
+            logger.info("Disable director - error");
+            return ResponseEntity.badRequest().headers(notFound(cuit)).body(null);
+        } else if (Boolean.FALSE.equals(dto.getEnabled())) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("ERROR", "Director with cuit " + cuit + " is already disabled");
+            return ResponseEntity.badRequest().headers(headers).body(dto);
         }
-        service.delete(delDirector);
-        logger.info("Director deleted");
-        return new ResponseEntity<>(service.readByCuit(directorCuit), HttpStatus.OK);
+        service.disable(dto);
+        logger.info("Director disabled");
+        return new ResponseEntity<>(service.readByCuit(cuit), HttpStatus.OK);
+    }
+
+    @PatchMapping(value = ID)
+    public ResponseEntity<DirectorDTO> enable(@PathVariable(value = "cuit") String cuit) {
+        logger.info("Enabling director with cuit {}", cuit);
+        DirectorDTO dto = service.readByCuit(cuit);
+        if (dto == null) {
+            logger.info("Enable director - error");
+            return ResponseEntity.badRequest().headers(notFound(cuit)).body(null);
+        } else if (Boolean.TRUE.equals(dto.getEnabled())) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("ERROR", "Director with cuit " + cuit + " is already enabled");
+            return ResponseEntity.badRequest().headers(headers).body(dto);
+        }
+        service.enable(dto);
+        logger.info("Director enabled");
+        return new ResponseEntity<>(service.readByCuit(cuit), HttpStatus.OK);
     }
 
     private HttpHeaders notFound(String cuit) {

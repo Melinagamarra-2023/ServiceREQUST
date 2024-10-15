@@ -14,6 +14,8 @@ public interface ServiceCRUD<REQUEST, RESPONSE> {
 
     RESPONSE update(REQUEST request) throws DataAccessException;
 
-    RESPONSE delete(REQUEST request) throws DataAccessException;
+    RESPONSE disable(REQUEST request) throws DataAccessException;
+
+    RESPONSE enable(REQUEST request) throws DataAccessException;
 
 }

@@ -96,14 +96,27 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDTO delete(DirectorDTO director) {
+    public DirectorDTO disable(DirectorDTO director) {
         try {
             logger.info("Eliminando al directivo bajo el CUIT: {}", director.getCuit());
-            Director delDirector = toEntity(director);
-            delDirector.setEnabled(false);
-            return toDTO(repository.save(delDirector));
+            Director entity = toEntity(director);
+            entity.setEnabled(false);
+            return toDTO(repository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido eliminar al directivo {}. Error {}", director.getCuit(), e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public DirectorDTO enable(DirectorDTO director) {
+        try {
+            logger.info("Habilitando al directivo bajo el CUIT: {}", director.getCuit());
+            Director entity = toEntity(director);
+            entity.setEnabled(true);
+            return toDTO(repository.save(entity));
+        } catch (Exception e) {
+            logger.error("No se ha podido habilitar al directivo {}. Error {}", director.getCuit(), e.getMessage());
         }
         return null;
     }
