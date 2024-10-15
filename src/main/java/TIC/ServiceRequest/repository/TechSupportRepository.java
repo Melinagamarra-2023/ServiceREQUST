@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface TechSupportRepository extends JpaRepository<TechSupport,Long> {
 
-    TechSupport findByCode(String code);
+
 }

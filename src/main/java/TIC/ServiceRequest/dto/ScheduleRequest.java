@@ -11,11 +11,9 @@ import java.util.GregorianCalendar;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TechResponse {
+public class ScheduleRequest {
     @JsonIgnore
     long id;
     private String code;
-    private Institute institute;
-    private String date;
-    private String type;
+    private GregorianCalendar date;
 }
