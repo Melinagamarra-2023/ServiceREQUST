@@ -26,7 +26,6 @@ import java.util.GregorianCalendar;
 public class TechRequest {
     @JsonIgnore
     long id;
-
     private String code;
     private Institute institute;
    private String type;

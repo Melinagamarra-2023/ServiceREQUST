@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.GregorianCalendar;
+import java.util.List;
 
 @Data
 @Entity
@@ -20,13 +21,14 @@ public class TechSupport {
 
     @Column (unique = true)
     private String code;
-
     @ManyToOne
     @JoinColumn(name = "institute_id")
     private Institute institute;
-  
     private State state;
-    private GregorianCalendar date;
     private SupportType type;
+    private GregorianCalendar date;
+    @OneToMany
+    (mappedBy = "techSupport")
+    private List<Log> logs;
     
 }
