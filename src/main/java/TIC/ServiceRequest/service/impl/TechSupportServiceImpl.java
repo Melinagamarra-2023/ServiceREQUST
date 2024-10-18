@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.GregorianCalendar;
 
-import static TIC.ServiceRequest.constant.Constant.*;
+import static TIC.ServiceRequest.constant.TechSupportConstants.*;
 
 @Service
 @Slf4j
