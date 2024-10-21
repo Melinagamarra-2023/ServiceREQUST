@@ -18,6 +18,7 @@ public class Log {
     long id;
 
     private GregorianCalendar date;
+    @Enumerated(EnumType.STRING)
     private State state;
     @ManyToOne
     @JoinColumn(name = "tech_support_id")

@@ -24,7 +24,6 @@ public class TechSupport {
     @ManyToOne
     @JoinColumn(name = "institute_id")
     private Institute institute;
-    private State state;
     private SupportType type;
     private GregorianCalendar date;
     @OneToMany

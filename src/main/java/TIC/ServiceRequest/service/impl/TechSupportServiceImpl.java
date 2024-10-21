@@ -7,6 +7,7 @@ import TIC.ServiceRequest.model.*;
 import TIC.ServiceRequest.repository.InstituteRepository;
 import TIC.ServiceRequest.repository.LogRepository;
 import TIC.ServiceRequest.repository.TechSupportRepository;
+import TIC.ServiceRequest.repository.TechnicianRepository;
 import TIC.ServiceRequest.service.TechSupportService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static TIC.ServiceRequest.constant.TechSupportConstants.*;
 
@@ -24,12 +27,16 @@ public class TechSupportServiceImpl implements TechSupportService {
     private final TechSupportRepository repository;
     private final LogRepository logRepository;
     private final InstituteRepository instituteRepository;
+    private final List<Technician>technicians;
+    private final TechnicianRepository technicianRepository;
     protected static final Logger logger = LoggerFactory.getLogger(TechSupportServiceImpl.class);
 
-    public TechSupportServiceImpl(TechSupportRepository repository, InstituteRepository instituteRepository, LogRepository logRepository) {
+    public TechSupportServiceImpl(TechSupportRepository repository, InstituteRepository instituteRepository, LogRepository logRepository, TechnicianRepository technicianRepository) {
         this.logRepository = logRepository;
         this.repository = repository;
         this.instituteRepository = instituteRepository;
+        this.technicianRepository = technicianRepository;
+        technicians = new ArrayList<>();
     }
 
     @Override
@@ -71,11 +78,21 @@ public class TechSupportServiceImpl implements TechSupportService {
 
 
     @Override
+    @Transactional
     public TechResponse scheduleService(GregorianCalendar date, ScheduleRequest request) {
         TechResponse response = new TechResponse();
         try {
-
             TechSupport techSupport = findByCode(request.getCode());
+            boolean technicianFound = false;
+            for (Technician tec : technicianRepository.findAll()) {
+                if (techSupport.getInstitute().getCuise().equals(tec.getInstitute().getCuise())) {
+                    technicianFound = true;
+                    break;
+                }
+            }
+            if (!technicianFound) {
+                logger.info(TECHNICIAN_ERROR);
+                 }
             techSupport.setDate(date);
             response = toDTO(repository.save(techSupport));
             newLog(techSupport, State.AGENDADO);
@@ -121,8 +138,8 @@ public class TechSupportServiceImpl implements TechSupportService {
     public TechResponse cenceledService(String code) {
         try {
             TechSupport techSupport = findByCode(code);
-            TechResponse response = toDTO(repository.save(techSupport));
             newLog(techSupport, State.CANCELADO);
+            TechResponse response = toDTO(repository.save(techSupport));
             logger.info(JOB_CANCELED + "{}", techSupport.getCode());
             return response;
         } catch (Exception e) {
@@ -158,16 +175,19 @@ public class TechSupportServiceImpl implements TechSupportService {
         newLog.setDate(new GregorianCalendar());
         newLog.setState(state);
         logRepository.save(newLog);
+        techSupport.getLogs().add(newLog);
 
     }
 
 
 
-    public TechSupport findByCode(String code){
+    private TechSupport findByCode(String code){
         return repository.findAll().stream()
                 .filter(techSupport -> techSupport.getCode().equals(code))
                 .findFirst()
                 .orElse(null);
     }
+
+
 
 }

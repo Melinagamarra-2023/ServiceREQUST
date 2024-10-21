@@ -16,4 +16,5 @@ public class ScheduleRequest {
     long id;
     private String code;
     private GregorianCalendar date;
+    private String cuit;
 }

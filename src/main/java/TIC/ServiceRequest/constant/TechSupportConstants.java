@@ -2,6 +2,9 @@ package TIC.ServiceRequest.constant;
 
 public class TechSupportConstants {
 
+
+    //<------ TechSupport ------>
+
     public static final String SUCCESSFULLY_MESSAGE = "Service: El servicio fue solicitado con exito :";
     public static final String ERROR_MESSAGE = "Service: NO se ha podido solicitar el servicio";
     public static final String SUCCESSFULLY_MESSAGE_SCHEDULE = "Service: El servicio fue agendado  con exito :";
@@ -12,5 +15,8 @@ public class TechSupportConstants {
     public static final String JOB_ERROR_MESSAGE = "Service: No se ha podido confirmar la finalizacion del trabajo ";
     public static final String JOB_CANCELED ="El trabajo ha sido concelado con exito";
     public static final String JOB_ERROR_CANCELED =" No se ha podido cancelar el servicio tecnico ";
+    public static final String TECHNICIAN_ERROR = "El técnico solicitado, no esta vinculado al instituto";
+    //<------ Director ------>
+    public static final String ERROR_SEARCH = "Ha ocurrido un fallo al buscar el directivo/s. Error:";
 
 }
