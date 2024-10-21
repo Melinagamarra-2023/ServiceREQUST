@@ -58,8 +58,8 @@ public class DirectorController {
         return ResponseEntity.ok().headers(header(SUCCESFULL, FOUND)).body(response);
     }
 
-    @GetMapping(value = "")
-    public ResponseEntity<List<DirectorDTO>> readByInstitute(String instituteCuise) {
+    @GetMapping(value = "/{cuise}")
+    public ResponseEntity<List<DirectorDTO>> readByInstitute(@PathVariable(value = "cuise") String instituteCuise) {
         logger.info("Get all directors from an Institute");
         List<DirectorDTO> response = new ArrayList<>(service.readAll());
         if (response.isEmpty()) {
