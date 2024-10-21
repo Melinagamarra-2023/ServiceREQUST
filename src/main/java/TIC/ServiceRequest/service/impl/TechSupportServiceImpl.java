@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static TIC.ServiceRequest.constant.Constant.*;
+import static TIC.ServiceRequest.constant.TechSupportConstants.*;
 
 @Service
 @Slf4j

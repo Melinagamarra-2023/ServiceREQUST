@@ -1,6 +1,6 @@
 package TIC.ServiceRequest.constant;
 
-public class Constant {
+public class TechSupportConstants {
 
     //<------ TechSupport ------>
     public static final String SUCCESSFULLY_MESSAGE = "Service: El servicio fue solicitado con exito :";
