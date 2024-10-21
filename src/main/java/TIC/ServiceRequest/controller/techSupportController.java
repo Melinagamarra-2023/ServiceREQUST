@@ -5,6 +5,7 @@ import TIC.ServiceRequest.dto.TechRequest;
 import TIC.ServiceRequest.dto.TechResponse;
 import TIC.ServiceRequest.model.TechSupport;
 import TIC.ServiceRequest.service.impl.TechSupportServiceImpl;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -27,26 +28,26 @@ public class techSupportController {
     }
 
     @PostMapping("/support")
-    public ResponseEntity<TechSupport> createSupport(@RequestBody TechRequest techRequest) {
+    public ResponseEntity<TechSupport> createSupport(@Valid @RequestBody TechRequest techRequest) {
         return new ResponseEntity(this.service.requestService(techRequest), HttpStatus.CREATED);
     }
 
 
     @PostMapping("/schedule")
-    public ResponseEntity<TechSupport> scheduleSupport(@RequestBody ScheduleRequest scheduleRequest){
+    public ResponseEntity<TechSupport> scheduleSupport(@Valid @RequestBody ScheduleRequest scheduleRequest){
         return new ResponseEntity(this.service.scheduleService(scheduleRequest.getDate(),scheduleRequest),HttpStatus.CREATED);
     }
 
     @PostMapping("/acceptTechnician")
-    public TechResponse acceptTechnician (@RequestBody ScheduleRequest request){
+    public TechResponse acceptTechnician (@Valid @RequestBody ScheduleRequest request){
             return this.service.acceptTechnician(request.getCode());
     }
     @PostMapping("/acceptDirector")
-    public TechResponse acceptDirector (@RequestBody ScheduleRequest request){
+    public TechResponse acceptDirector (@Valid @RequestBody ScheduleRequest request){
         return this.service.acceptDirector(request.getCode());
     }
     @PostMapping("/cenceledService")
-    public TechResponse cenceledService (@RequestBody ScheduleRequest request){
+    public TechResponse cenceledService (@Valid @RequestBody ScheduleRequest request){
         return this.service.cenceledService(request.getCode());
     }
 }

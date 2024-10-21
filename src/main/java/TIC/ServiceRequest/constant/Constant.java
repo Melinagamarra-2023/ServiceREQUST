@@ -13,7 +13,7 @@ public class Constant {
     public static final String JOB_ERROR_MESSAGE = "Service: No se ha podido confirmar la finalizacion del trabajo ";
     public static final String JOB_CANCELED ="El trabajo ha sido concelado con exito";
     public static final String JOB_ERROR_CANCELED =" No se ha podido cancelar el servicio tecnico ";
-
+    public static final String TECHNICIAN_ERROR = "El técnico solicitado, no esta vinculado al instituto";
     //<------ Director ------>
     public static final String ERROR_SEARCH = "Ha ocurrido un fallo al buscar el directivo/s. Error:";
 }
