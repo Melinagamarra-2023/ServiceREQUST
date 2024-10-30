@@ -90,6 +90,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>springboot-images-servicerequest</finalName>
 	</build>
 
 </project>
