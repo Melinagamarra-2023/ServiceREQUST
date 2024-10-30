@@ -34,7 +34,7 @@ jobs:
       with:
         image: tkevindev/springboot-images-servicerequest
         tags: latest
-        registry: registry-url.io
+        registry: registry-1.docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
