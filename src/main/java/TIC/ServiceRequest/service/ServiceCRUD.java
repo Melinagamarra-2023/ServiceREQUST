@@ -12,10 +12,10 @@ public interface ServiceCRUD<REQUEST, RESPONSE> {
 
     List<RESPONSE> readAll() throws DataAccessException;
 
-    RESPONSE update(REQUEST request) throws DataAccessException;
+    RESPONSE update(String cuit, REQUEST request) throws DataAccessException;
 
-    RESPONSE disable(REQUEST request) throws DataAccessException;
+    RESPONSE disable(String cuit) throws DataAccessException;
 
-    RESPONSE enable(REQUEST request) throws DataAccessException;
+    RESPONSE enable(String cuit) throws DataAccessException;
 
 }

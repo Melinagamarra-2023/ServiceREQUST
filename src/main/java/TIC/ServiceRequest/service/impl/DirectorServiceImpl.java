@@ -34,6 +34,11 @@ public class DirectorServiceImpl implements DirectorService {
             Director newDirector = toEntity(director);
             logger.info("Guardando al directivo: {}", newDirector.getCuit());
             newDirector.setEnabled(true);
+            if (readByCuit(director.getCuit()) != null) {
+                throw new Exception("Este cuit ya existe en el sistema");
+            } else if (director.getCuit().isBlank()) {
+                throw new Exception("No se permite cuit vacio");
+            }
             return toDTO(repository.save(newDirector));
         } catch (Exception e) {
             logger.error("No se ha podido guardar el directivo {}. Error: {}", director.getCuit(), e.getMessage());
@@ -59,7 +64,6 @@ public class DirectorServiceImpl implements DirectorService {
                     .filter(director -> director.getCuit().equals(cuit)).findFirst().orElseThrow());
         } catch (Exception e) {
             searchError(e);
-
         }
         return null;
     }
@@ -96,10 +100,10 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDTO update(DirectorDTO director) {
+    public DirectorDTO update(String cuit, DirectorDTO director) {
         try {
             logger.info("Actualizando directivo bajo el CUIT: {}", director.getCuit());
-            Director oldDirector = toEntity(readByCuit(director.getCuit()));
+            Director oldDirector = toEntity(readByCuit(cuit));
             Director newDirector = toEntity(director);
             oldDirector.setName(newDirector.getName());
             oldDirector.setLastname(newDirector.getLastname());
@@ -113,27 +117,27 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDTO disable(DirectorDTO director) {
+    public DirectorDTO disable(String cuit) {
         try {
-            logger.info("Eliminando al directivo bajo el CUIT: {}", director.getCuit());
-            Director entity = toEntity(director);
+            logger.info("Eliminando al directivo bajo el CUIT: {}", cuit);
+            Director entity = toEntity(readByCuit(cuit));
             entity.setEnabled(false);
             return toDTO(repository.save(entity));
         } catch (Exception e) {
-            logger.error("No se ha podido eliminar al directivo {}. Error {}", director.getCuit(), e.getMessage());
+            logger.error("No se ha podido eliminar al directivo {}. Error {}", cuit, e.getMessage());
         }
         return null;
     }
 
     @Override
-    public DirectorDTO enable(DirectorDTO director) {
+    public DirectorDTO enable(String cuit) {
         try {
-            logger.info("Habilitando al directivo bajo el CUIT: {}", director.getCuit());
-            Director entity = toEntity(director);
+            logger.info("Habilitando al directivo bajo el CUIT: {}", cuit);
+            Director entity = toEntity(readByCuit(cuit));
             entity.setEnabled(true);
             return toDTO(repository.save(entity));
         } catch (Exception e) {
-            logger.error("No se ha podido habilitar al directivo {}. Error {}", director.getCuit(), e.getMessage());
+            logger.error("No se ha podido habilitar al directivo {}. Error {}", cuit, e.getMessage());
         }
         return null;
     }
