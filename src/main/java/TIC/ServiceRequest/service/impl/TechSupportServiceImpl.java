@@ -1,8 +1,7 @@
 package TIC.ServiceRequest.service.impl;
 
 import TIC.ServiceRequest.dto.ScheduleRequest;
-import TIC.ServiceRequest.dto.TechRequest;
-import TIC.ServiceRequest.dto.TechResponse;
+import TIC.ServiceRequest.dto.TechSupportDTO;
 import TIC.ServiceRequest.model.*;
 import TIC.ServiceRequest.repository.InstituteRepository;
 import TIC.ServiceRequest.repository.LogRepository;
@@ -41,8 +40,8 @@ public class TechSupportServiceImpl implements TechSupportService {
 
     @Override
     @Transactional
-    public TechResponse requestService(TechRequest requestTech) {
-        TechResponse response = new TechResponse();
+    public TechSupportDTO requestService(TechSupportDTO requestTech) {
+        TechSupportDTO response = new TechSupportDTO();
         TechSupport techSupport = toEntity(requestTech);
         Institute institute = instituteRepository.findByCuise(requestTech.getInstitute().getCuise());
         if (institute == null) {
@@ -79,8 +78,8 @@ public class TechSupportServiceImpl implements TechSupportService {
 
     @Override
     @Transactional
-    public TechResponse scheduleService(GregorianCalendar date, ScheduleRequest request) {
-        TechResponse response = new TechResponse();
+    public TechSupportDTO scheduleService(GregorianCalendar date, ScheduleRequest request) {
+        TechSupportDTO response = new TechSupportDTO();
         try {
             TechSupport techSupport = findByCode(request.getCode());
             boolean technicianFound = false;
@@ -107,10 +106,10 @@ public class TechSupportServiceImpl implements TechSupportService {
 
 
     @Override
-    public TechResponse acceptTechnician(String code) {
+    public TechSupportDTO acceptTechnician(String code) {
         try {
             TechSupport techSupport = findByCode(code);
-            TechResponse response = toDTO(repository.save(techSupport));
+            TechSupportDTO response = toDTO(repository.save(techSupport));
             newLog(techSupport, State.PRESENTE);
             logger.info(PRESENCE_CONFIRMATION_MESSAGE + "{}", techSupport.getCode());
             return response;
@@ -121,10 +120,10 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
     @Override
-    public TechResponse acceptDirector(String code) {
+    public TechSupportDTO acceptDirector(String code) {
         try {
             TechSupport techSupport = findByCode(code);
-            TechResponse response = toDTO(repository.save(techSupport));
+            TechSupportDTO response = toDTO(repository.save(techSupport));
             newLog(techSupport, State.TERMINADO);
             logger.info(JOB_CONFIRMATION_MESSAGE + "{}", techSupport.getCode());
             return response;
@@ -135,11 +134,11 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
     @Override
-    public TechResponse cenceledService(String code) {
+    public TechSupportDTO cenceledService(String code) {
         try {
             TechSupport techSupport = findByCode(code);
             newLog(techSupport, State.CANCELADO);
-            TechResponse response = toDTO(repository.save(techSupport));
+            TechSupportDTO response = toDTO(repository.save(techSupport));
             logger.info(JOB_CANCELED + "{}", techSupport.getCode());
             return response;
         } catch (Exception e) {
@@ -149,7 +148,7 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
 
-    private TechSupport toEntity(TechRequest techRequest) {
+    private TechSupport toEntity(TechSupportDTO techRequest) {
         TechSupport techSupport = new TechSupport();
         techSupport.setCode(techRequest.getCode());
         techSupport.setInstitute(techRequest.getInstitute());
@@ -157,8 +156,8 @@ public class TechSupportServiceImpl implements TechSupportService {
         return techSupport;
     }
 
-    private TechResponse toDTO(TechSupport techSupport) {
-        TechResponse newTech = new TechResponse();
+    private TechSupportDTO toDTO(TechSupport techSupport) {
+        TechSupportDTO newTech = new TechSupportDTO();
         newTech.setCode(techSupport.getCode());
         newTech.setInstitute(techSupport.getInstitute());
         newTech.setType(techSupport.getType().name());

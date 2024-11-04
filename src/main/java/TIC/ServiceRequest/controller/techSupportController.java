@@ -1,8 +1,7 @@
 package TIC.ServiceRequest.controller;
 
 import TIC.ServiceRequest.dto.ScheduleRequest;
-import TIC.ServiceRequest.dto.TechRequest;
-import TIC.ServiceRequest.dto.TechResponse;
+import TIC.ServiceRequest.dto.TechSupportDTO;
 import TIC.ServiceRequest.model.TechSupport;
 import TIC.ServiceRequest.service.impl.TechSupportServiceImpl;
 import jakarta.validation.Valid;
@@ -28,7 +27,7 @@ public class techSupportController {
     }
 
     @PostMapping("/support")
-    public ResponseEntity<TechSupport> createSupport(@Valid @RequestBody TechRequest techRequest) {
+    public ResponseEntity<TechSupport> createSupport(@Valid @RequestBody TechSupportDTO techRequest) {
         return new ResponseEntity(this.service.requestService(techRequest), HttpStatus.CREATED);
     }
 
@@ -39,15 +38,16 @@ public class techSupportController {
     }
 
     @PostMapping("/acceptTechnician")
-    public TechResponse acceptTechnician (@Valid @RequestBody ScheduleRequest request){
-            return this.service.acceptTechnician(request.getCode());
+    public ResponseEntity<TechSupportDTO> acceptTechnician (@Valid @RequestBody ScheduleRequest request) {
+        return new ResponseEntity<>(this.service.acceptTechnician(request.getCode()), HttpStatus.OK);
     }
+
     @PostMapping("/acceptDirector")
-    public TechResponse acceptDirector (@Valid @RequestBody ScheduleRequest request){
-        return this.service.acceptDirector(request.getCode());
+    public ResponseEntity<TechSupportDTO>acceptDirector(@Valid @RequestBody ScheduleRequest request){
+        return new ResponseEntity<>(this.service.acceptDirector(request.getCode()),HttpStatus.OK);
     }
     @PostMapping("/cenceledService")
-    public TechResponse cenceledService (@Valid @RequestBody ScheduleRequest request){
-        return this.service.cenceledService(request.getCode());
+    public ResponseEntity<TechSupportDTO> cenceledService (@Valid @RequestBody ScheduleRequest request){
+        return new ResponseEntity<>(this.service.cenceledService(request.getCode()),HttpStatus.OK);
     }
 }

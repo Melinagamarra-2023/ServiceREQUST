@@ -1,23 +1,22 @@
 package TIC.ServiceRequest.service;
 
 import TIC.ServiceRequest.dto.ScheduleRequest;
-import TIC.ServiceRequest.dto.TechRequest;
 
-import TIC.ServiceRequest.dto.TechResponse;
+import TIC.ServiceRequest.dto.TechSupportDTO;
 
 
 import java.util.GregorianCalendar;
 
 public interface TechSupportService {
 
-    TechResponse requestService(TechRequest requestTech);
+    TechSupportDTO requestService(TechSupportDTO requestTech);
 
 
-   TechResponse scheduleService(GregorianCalendar date, ScheduleRequest request);
+   TechSupportDTO scheduleService(GregorianCalendar date, ScheduleRequest request);
 
-    TechResponse acceptTechnician(String code);
-    TechResponse acceptDirector(String code);
-    TechResponse  cenceledService(String code);
+    TechSupportDTO acceptTechnician(String code);
+    TechSupportDTO acceptDirector(String code);
+    TechSupportDTO cenceledService(String code);
 
 
 }
