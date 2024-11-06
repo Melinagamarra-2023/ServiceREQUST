@@ -43,7 +43,7 @@ public class TechSupportServiceImpl implements TechSupportService {
     public TechSupportDTO requestService(TechSupportDTO requestTech) {
         TechSupportDTO response = new TechSupportDTO();
         TechSupport techSupport = toEntity(requestTech);
-        Institute institute = instituteRepository.findByCuise(requestTech.getInstitute().getCuise());
+        Institute institute = findByCuise(requestTech.getInstitute().getCuise());
         if (institute == null) {
             logger.error("No hay ningun instituto cerado asociado a CUISE ingresado: {}", requestTech.getInstitute().getCuise());
             return response;
@@ -187,6 +187,12 @@ public class TechSupportServiceImpl implements TechSupportService {
                 .orElse(null);
     }
 
+    private Institute findByCuise ( String cuise) {
+        return instituteRepository.findAll().stream()
+                .filter(institute -> institute.getCuise().equals(cuise))
+                .findFirst()
+                .orElse(null);
+    }
 
 
 }
