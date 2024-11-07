@@ -2,7 +2,6 @@ package TIC.ServiceRequest.controller;
 
 import TIC.ServiceRequest.dto.ScheduleRequest;
 import TIC.ServiceRequest.dto.TechSupportDTO;
-import TIC.ServiceRequest.model.TechSupport;
 import TIC.ServiceRequest.service.impl.TechSupportServiceImpl;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/api/support")
 public class techSupportController {
-    private TechSupportServiceImpl service;
+    private final TechSupportServiceImpl service;
     protected static final Logger logger = LoggerFactory.getLogger(techSupportController.class);
 
     public techSupportController(TechSupportServiceImpl service) {
@@ -27,14 +26,14 @@ public class techSupportController {
     }
 
     @PostMapping("/support")
-    public ResponseEntity<TechSupport> createSupport(@Valid @RequestBody TechSupportDTO techRequest) {
-        return new ResponseEntity(this.service.requestService(techRequest), HttpStatus.CREATED);
+    public ResponseEntity<TechSupportDTO> createSupport(@Valid @RequestBody TechSupportDTO techRequest) {
+        return new ResponseEntity<>(this.service.requestService(techRequest), HttpStatus.CREATED);
     }
 
 
     @PostMapping("/schedule")
-    public ResponseEntity<TechSupport> scheduleSupport(@Valid @RequestBody ScheduleRequest scheduleRequest){
-        return new ResponseEntity(this.service.scheduleService(scheduleRequest.getDate(),scheduleRequest),HttpStatus.CREATED);
+    public ResponseEntity<TechSupportDTO> scheduleSupport(@Valid @RequestBody ScheduleRequest scheduleRequest){
+        return new ResponseEntity<>(this.service.scheduleService(scheduleRequest.getDate(),scheduleRequest),HttpStatus.CREATED);
     }
 
     @PostMapping("/acceptTechnician")
