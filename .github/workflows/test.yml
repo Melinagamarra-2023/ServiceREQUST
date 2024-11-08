@@ -1,0 +1,38 @@
+name: test
+
+on:
+  push:
+    branches: 
+        - Develop
+        
+  pull_request:
+    branches:
+         - Develop
+permissions:
+  checks: write
+  pull-requests: write 
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+           
+      - name: build and test
+        run : mvn clean install
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure() 
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml' 
+      
+    

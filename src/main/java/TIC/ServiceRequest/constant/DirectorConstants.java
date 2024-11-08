@@ -8,4 +8,5 @@ public class DirectorConstants {
     public static final String NOT_FOUND = "NOT_FOUND";
     public static final String CONT_ERROR_SEARCH = "Search directors - error";
     public static final String SUCCESFULL = "Succesfull";
+    public static final String HOLA = "HOLA";
 }

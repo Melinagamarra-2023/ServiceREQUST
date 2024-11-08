@@ -86,7 +86,8 @@ class DirectorServiceImplTest {
         verify(repository, times(1)).findAll();
     }
 
-   /* @Test
+/*
+   @Test
     void update() {
         directorsDTO.get(0).setName("nuevo nombre");
         assertEquals("nuevo nombre" ,service.update("123451", directorsDTO.get(0)).getName());
