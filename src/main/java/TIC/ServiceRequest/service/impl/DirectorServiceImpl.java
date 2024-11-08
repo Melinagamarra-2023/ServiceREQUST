@@ -29,7 +29,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDTO save(DirectorDTO director) throws DataAccessException {
+    public DirectorDTO create(DirectorDTO director) throws DataAccessException {
         try {
             Director newDirector = toEntity(director);
             logger.info("Guardando al directivo: {}", newDirector.getCuit());
