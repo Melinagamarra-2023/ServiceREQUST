@@ -2,10 +2,12 @@ name: test
 
 on:
   push:
-    branches: [ "Develop" ]
+    branches: 
+        - Develop
+        
   pull_request:
-    branches: [ "Develop" ]
-
+    branches:
+         - Develop
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +22,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
            
-      - name: build and test whith maven 
+      - name: build and test
         run : mvn clean install
 
       - name: Publish Test Report
