@@ -40,7 +40,7 @@ public class DirectorController {
                     .headers(header("CREATE_ERROR", startDescription(request.getCuit())+" already exist"))
                     .body(request);
         }
-        response = this.service.save(request);
+        response = this.service.create(request);
         URI uri = new URI("/api/directors/" + response.getCuit());
         logger.info("Director created");
         return ResponseEntity.ok().headers(header(SUCCESFULL, "Director created")).location(uri).body(response);

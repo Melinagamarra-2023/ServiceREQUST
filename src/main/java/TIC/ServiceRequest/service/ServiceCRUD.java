@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ServiceCRUD<REQUEST, RESPONSE> {
 
-    RESPONSE save(REQUEST request) throws DataAccessException;
+    RESPONSE create(REQUEST request) throws DataAccessException;
 
     RESPONSE readOne(Long id) throws DataAccessException;
 
