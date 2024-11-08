@@ -16,5 +16,5 @@ public class TechSupportDTO {
     private Institute institute;
     private String date;
     private String type;
-    private String prueba; 
+
 }
