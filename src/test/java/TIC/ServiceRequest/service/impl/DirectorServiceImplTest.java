@@ -1,8 +1,8 @@
 package TIC.ServiceRequest.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,14 +33,15 @@ class DirectorServiceImplTest {
     void setUp() {
         repository = mock(DirectorRepository.class);
         service = new DirectorServiceImpl(repository);
-        createDirectors();
         repositoryMock();
+        createDirectors();
     }
 
     @Test
     void correctCreate() {
-        when(repository.save(any())).thenReturn(directors.get(0));
-        assertEquals("123451", service.create(directorsDTO.get(0)).getCuit());
+        when(repository.save(any())).thenReturn(
+                new Director(1L, "123455",null,"","","","",true));
+        assertEquals("123455", service.create(directorsDTO.get(1)).getCuit());
         verify(repository, times(1)).save(any());
     }
 
@@ -53,7 +54,6 @@ class DirectorServiceImplTest {
 
     @Test
     void repeatedCreate() {
-        service.create(directorsDTO.get(0));
         assertNull(service.create(directorsDTO.get(0)));
         verify(repository, never()).save(any(Director.class));
     }
@@ -139,7 +139,8 @@ class DirectorServiceImplTest {
         Institute institute1 = new Institute();
         Institute institute2 = new Institute();
         Institute institute3 = new Institute();
-        DirectorDTO directorDTO = new DirectorDTO();
+        DirectorDTO directorDTO1 = new DirectorDTO();
+        DirectorDTO directorDTO2 = new DirectorDTO();
         director1.setCuit("123451");
         director1.setName("1nombre");
         director1.setLastname("1apellido");
@@ -160,11 +161,16 @@ class DirectorServiceImplTest {
         director4.setLastname("4apellido");
         director4.setMail("4@gmail.com");
         director4.setPhone("37644");
-        directorDTO.setCuit("123452");
-        directorDTO.setName("2nombre");
-        directorDTO.setLastname("2apellido");
-        directorDTO.setMail("2@gmail.com");
-        directorDTO.setPhone("37642");
+        directorDTO1.setCuit("123452");
+        directorDTO1.setName("2nombre");
+        directorDTO1.setLastname("2apellido");
+        directorDTO1.setMail("2@gmail.com");
+        directorDTO1.setPhone("37642");
+        directorDTO2.setCuit("123455");
+        directorDTO2.setName("nombreNombre");
+        directorDTO2.setLastname("apellidoApellido");
+        directorDTO2.setMail("gmail@gmail.com");
+        directorDTO2.setPhone("37643764");
         institute1.setId(1L);
         institute1.setCuise("112345");
         institute2.setId(2L);
@@ -175,12 +181,14 @@ class DirectorServiceImplTest {
         director2.setInstitute(institute2);
         director3.setInstitute(institute3);
         director4.setInstitute(institute2);
-        directorDTO.setInstitute(institute1);
+        directorDTO1.setInstitute(institute1);
+        directorDTO1.setInstitute(institute3);
         directors.add(director1);
         directors.add(director2);
         directors.add(director3);
         directors.add(director4);
-        directorsDTO.add(directorDTO);
+        directorsDTO.add(directorDTO1);
+        directorsDTO.add(directorDTO2);
     }
 
     void repositoryMock() {
