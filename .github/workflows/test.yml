@@ -32,6 +32,10 @@ jobs:
       - name: build and test
         run : mvn clean install
 
+      - name: Generate text report from JUnit XML
+        run: |
+          cat target/surefire-reports/*.xml > target/test-report.txt
+
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
         if: success() || failure() 
