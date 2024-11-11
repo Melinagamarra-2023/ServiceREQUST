@@ -57,6 +57,7 @@ jobs:
         with:
           branch: "automatized Pull Request"
           base: Develop
+          token: ${{  secrets.GIT_TOKEN  }}
           author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
           commit-message: |
             Functional version
