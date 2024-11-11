@@ -42,12 +42,26 @@ jobs:
         with:
           report_paths: target/surefire-reports/*.xml
 
-      - name: Successful Tests
+      - name: SUCCESSFUL TESTS - extract commit data
         if: success()
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: rlespinasse/git-commit-data-action@v1.x
+
+      - name: SUCCESSFUL TESTS - update author
+        if: success()
+        run: echo ${{  env.GIT_COMMIT_AUTHOR_NAME  }} > AUTHOR
+
+      - name: SUCCESSFUL TESTS - create Pull Request
+        if: success()
+        uses: peter-evans/create-pull-request@v7
         with:
-          branch: main
-          commit_message: Functional Version, changes have been automatically applied to the main branch.
+          branch: "automatized Pull Request"
+          base: Develop
+          tittle: Functional version
+          commiter: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
+          author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
+          body: the changes can be applied to the main branch.
+          token: ${{  secrets.GITHUB.TOKEN  }}
+          delete-branch: true
 
       - name: Failed Tests
         if: failure()
