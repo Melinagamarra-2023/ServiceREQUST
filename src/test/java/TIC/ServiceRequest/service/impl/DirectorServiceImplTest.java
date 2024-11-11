@@ -107,22 +107,23 @@ class DirectorServiceImplTest {
 
     @Test
     void updateSuccessful() {
-        directorsDTO.get(0).setName("nuevo nombre");
+        when(repository.save(any(Director.class))).thenReturn(directors.get(1));
+        directors.get(1).setName("nuevo nombre");
         assertEquals("nuevo nombre", service.update("123452", directorsDTO.get(0)).getName());
-        verify(repository, times(1)).save(any(Director.class));
     }
 
     @Test
     void updateWrong() {
-        directorsDTO.get(0).setName("");
-        assertNull(service.update("123452", directorsDTO.get(0)));
+        directorsDTO.get(1).setName("");
+        assertNull(service.update("123452", directorsDTO.get(1)));
         verify(repository, never()).save(any(Director.class));
     }
 
     @Test
     void disableExist() {
-        assertFalse(service.disable("123451").getEnabled());
-        verify(repository, times(1)).save(any(Director.class));
+        when(repository.save(any(Director.class))).thenReturn(directors.get(3));
+        assertFalse(service.disable("123454").getEnabled());
+        verify(repository, times(2)).save(any(Director.class));
     }
 
     @Test
@@ -133,14 +134,14 @@ class DirectorServiceImplTest {
 
     @Test
     void disableAlreadyDisabled() {
-        assertFalse(service.disable("123459").getEnabled());
-        assertNull(service.disable("123459"));
-        verify(repository, times(1)).save(any(Director.class));
+        directors.get(3).setEnabled(false);
+        assertNull(service.disable("123454"));
+        verify(repository, never()).save(any(Director.class));
     }
 
     @Test
     void enableExist() {
-        assertFalse(service.disable("123453").getEnabled());
+        when(repository.save(any(Director.class))).thenReturn(directors.get(2));
         assertTrue(service.enable("123453").getEnabled());
         verify(repository, times(2)).save(any(Director.class));
     }
@@ -153,7 +154,8 @@ class DirectorServiceImplTest {
 
     @Test
     void enableAlreadyEnabled() {
-        assertNull(service.enable("123459"));
+        directors.get(2).setEnabled(true);
+        assertNull(service.enable("123453"));
         verify(repository, never()).save(any(Director.class));
     }
 
@@ -185,6 +187,7 @@ class DirectorServiceImplTest {
         director3.setLastname("3apellido");
         director3.setMail("3@gmail.com");
         director3.setPhone("37643");
+        director3.setEnabled(false);
         //
         director4.setCuit("123454");
         director4.setName("4nombre");

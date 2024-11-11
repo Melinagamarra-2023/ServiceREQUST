@@ -60,7 +60,8 @@ public class DirectorServiceImpl implements DirectorService {
     public DirectorDTO readByCuit(String cuit) throws DataAccessException {
         try {
             logger.info("Buscando directivo bajo el CUIT: {}", cuit);
-            return toDTO(repository.findAll().stream()
+            List<Director> directors = repository.findAll();
+            return toDTO(directors.stream()
                     .filter(director -> director.getCuit().equals(cuit)).findFirst().orElseThrow());
         } catch (Exception e) {
             searchError(e);
@@ -105,6 +106,10 @@ public class DirectorServiceImpl implements DirectorService {
             logger.info("Actualizando directivo bajo el CUIT: {}", director.getCuit());
             Director oldDirector = toEntity(readByCuit(cuit));
             Director newDirector = toEntity(director);
+            if (newDirector.getName().isEmpty() || newDirector.getLastname().isEmpty() ||
+                    newDirector.getPhone().isEmpty() || newDirector.getMail().isEmpty()) {
+                throw new Exception("No se admiten datos vacios");
+            }
             oldDirector.setName(newDirector.getName());
             oldDirector.setLastname(newDirector.getLastname());
             oldDirector.setPhone(newDirector.getPhone());
@@ -121,7 +126,10 @@ public class DirectorServiceImpl implements DirectorService {
         try {
             logger.info("Eliminando al directivo bajo el CUIT: {}", cuit);
             Director entity = toEntity(readByCuit(cuit));
-            entity.setEnabled(false);
+            if (Boolean.FALSE.equals(entity.getEnabled())) {
+                throw new Exception("Directivo ya deshabilitado.");
+            }
+            repository.save(entity).setEnabled(false);
             return toDTO(repository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido eliminar al directivo {}. Error {}", cuit, e.getMessage());
@@ -134,7 +142,10 @@ public class DirectorServiceImpl implements DirectorService {
         try {
             logger.info("Habilitando al directivo bajo el CUIT: {}", cuit);
             Director entity = toEntity(readByCuit(cuit));
-            entity.setEnabled(true);
+            if (Boolean.TRUE.equals(entity.getEnabled())) {
+                throw new Exception("Directivo ya Habilitado.");
+            }
+            repository.save(entity).setEnabled(true);
             return toDTO(repository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido habilitar al directivo {}. Error {}", cuit, e.getMessage());
@@ -169,7 +180,6 @@ public class DirectorServiceImpl implements DirectorService {
         dto.setEnabled(director.getEnabled());
         return dto;
     }
-
 
     private void searchError(Exception e) {
         logger.error(SERV_ERROR_SEARCH + " {}", e.getMessage());
