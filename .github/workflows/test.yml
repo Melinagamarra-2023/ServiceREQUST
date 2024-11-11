@@ -51,4 +51,4 @@ jobs:
 
       - name: Failed Tests
         if: failure()
-        run: echo "::error Tests were not satisfactory, non-functional version"
+        run: echo "core.error Tests were not satisfactory, non-functional version"
