@@ -59,24 +59,39 @@ class DirectorServiceImplTest {
     }
 
     @Test
-    void readOne() {
+    void readOneExist() {
         String expected = "123454";
         when(repository.findById(4L)).thenReturn(Optional.ofNullable(directors.get(3)));
         assertEquals(expected, service.readOne(4L).getCuit());
     }
 
     @Test
-    void readByCuit() {
+    void readOneNonExist() {
+
+    }
+
+    @Test
+    void readByCuitExist() {
         String expected = "123453";
         assertEquals(expected, service.readByCuit(expected).getCuit());
         verify(repository, times(1)).findAll();
     }
 
     @Test
-    void readByInstitute() {
+    void readByCuitNonExist() {
+
+    }
+
+    @Test
+    void readByInstituteExist() {
         int expected = 2;
         assertEquals(expected, service.readByInstitute("212345").size());
         verify(repository, times(1)).findAll();
+    }
+
+    @Test
+    void readByInstituteNonExist() {
+
     }
 
     @Test
@@ -86,11 +101,15 @@ class DirectorServiceImplTest {
         verify(repository, times(1)).findAll();
     }
 
+<<<<<<< Updated upstream
 /*
    @Test
+=======
+    @Test
+>>>>>>> Stashed changes
     void update() {
         directorsDTO.get(0).setName("nuevo nombre");
-        assertEquals("nuevo nombre" ,service.update("123451", directorsDTO.get(0)).getName());
+        assertEquals("nuevo nombre", service.update("123452", directorsDTO.get(0)).getName());
         verify(repository, times(1)).save(any(Director.class));
     }
 
@@ -131,7 +150,7 @@ class DirectorServiceImplTest {
         assertNull(service.enable("123459"));
         verify(repository, never()).save(any(Director.class));
     }
-*/
+
     void createDirectors() {
         Director director1 = new Director();
         Director director2 = new Director();
@@ -183,7 +202,7 @@ class DirectorServiceImplTest {
         director3.setInstitute(institute3);
         director4.setInstitute(institute2);
         directorDTO1.setInstitute(institute1);
-        directorDTO1.setInstitute(institute3);
+        directorDTO2.setInstitute(institute3);
         directors.add(director1);
         directors.add(director2);
         directors.add(director3);
