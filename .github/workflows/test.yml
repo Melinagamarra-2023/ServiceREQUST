@@ -43,11 +43,16 @@ jobs:
         if: success()
         run: echo ${{  env.GIT_COMMIT_AUTHOR_NAME  }} > AUTHOR
 
+      - name: Extract commit data
+        if: success()
+        uses: rlespinasse/git-commit-data-action@v1.x
+
       - name: SUCCESSFUL TESTS - create Pull Request
         if: success()
         uses: peter-evans/create-pull-request@v7
         with:
-          branch: "automatized_Pull_Request"
+          branch: automatized_Pull_Request
+          token: ${{  GITHUB_TOKEN  }}
           author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
           commit-message: |
             Functional version
