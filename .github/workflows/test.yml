@@ -39,11 +39,7 @@ jobs:
         with:
           report_paths: target/surefire-reports/*.xml
 
-      - name: SUCCESSFUL TESTS - extract commit data
-        if: success()
-        uses: rlespinasse/git-commit-data-action@v1.x
-
-      - name: SUCCESSFUL TESTS - update author
+      - name: Update author
         if: success()
         run: echo ${{  env.GIT_COMMIT_AUTHOR_NAME  }} > AUTHOR
 
@@ -52,7 +48,6 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           branch: "automatized_Pull_Request"
-          token: ${{ secrets.GIT_TOKEN }}
           author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
           commit-message: |
             Functional version
