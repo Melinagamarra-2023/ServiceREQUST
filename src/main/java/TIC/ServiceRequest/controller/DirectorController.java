@@ -40,7 +40,7 @@ public class DirectorController {
                     .headers(header("CREATE_ERROR", startDescription(request.getCuit())+" already exist"))
                     .body(request);
         }
-        response = this.service.save(request);
+        response = this.service.create(request);
         URI uri = new URI("/api/directors/" + response.getCuit());
         logger.info("Director created");
         return ResponseEntity.ok().headers(header(SUCCESFULL, "Director created")).location(uri).body(response);
@@ -93,7 +93,7 @@ public class DirectorController {
             logger.info("Update director - error");
             return ResponseEntity.badRequest().headers(header(NOT_FOUND, notFoundDescription(cuit))).body(null);
         }
-        DirectorDTO response = service.update(newDirector);
+        DirectorDTO response = service.update(cuit, newDirector);
         logger.info("Director updated");
         return ResponseEntity.ok().headers(header(SUCCESFULL, "Director updated")).body(response);
     }
@@ -101,16 +101,15 @@ public class DirectorController {
     @DeleteMapping(value = CUIT)
     public ResponseEntity<DirectorDTO> disable(@PathVariable(value = "cuit") String cuit) {
         logger.info("Disabling director with cuit {}", cuit);
-        DirectorDTO dto = service.readByCuit(cuit);
-        if (dto == null) {
+        if (service.readByCuit(cuit) == null) {
             logger.info("Disable director - error");
             return ResponseEntity.badRequest().headers(header(NOT_FOUND, notFoundDescription(cuit))).body(null);
-        } else if (Boolean.FALSE.equals(dto.getEnabled())) {
+        } else if (Boolean.FALSE.equals(service.readByCuit(cuit).getEnabled())) {
             return ResponseEntity.badRequest()
                     .headers(header("DISABLE_ERROR", startDescription(cuit) + " is already disabled"))
-                    .body(dto);
+                    .body(service.readByCuit(cuit));
         }
-        DirectorDTO response = service.disable(dto);
+        DirectorDTO response = service.disable(cuit);
         logger.info("Director disabled");
         return ResponseEntity.ok().headers(header(SUCCESFULL, "Director disabled")).body(response);
     }
@@ -118,16 +117,15 @@ public class DirectorController {
     @PatchMapping(value = CUIT)
     public ResponseEntity<DirectorDTO> enable(@PathVariable(value = "cuit") String cuit) {
         logger.info("Enabling director with cuit {}", cuit);
-        DirectorDTO dto = service.readByCuit(cuit);
-        if (dto == null) {
+        if (service.readByCuit(cuit) == null) {
             logger.info("Enable director - error");
             return ResponseEntity.badRequest().headers(header(NOT_FOUND, notFoundDescription(cuit))).body(null);
-        } else if (Boolean.TRUE.equals(dto.getEnabled())) {
+        } else if (Boolean.TRUE.equals(service.readByCuit(cuit).getEnabled())) {
             return ResponseEntity.badRequest()
                     .headers(header("ENABLE_ERROR", startDescription(cuit) + "is already enabled"))
-                    .body(dto);
+                    .body(service.readByCuit(cuit));
         }
-        DirectorDTO response = service.enable(dto);
+        DirectorDTO response = service.enable(cuit);
         logger.info("Director enabled");
         return ResponseEntity.ok().headers(header(SUCCESFULL, "Director enabled")).body(response);
     }

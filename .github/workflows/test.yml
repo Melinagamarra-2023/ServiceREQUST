@@ -5,13 +5,12 @@ on:
     branches: 
         - Develop
         
-  pull_request:
-    branches:
-         - Develop
+
 permissions:
+  contents: write
+  pull-requests: write
   checks: write
-  pull-requests: write 
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,14 +24,41 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Clean Maven cache
+        run: mvn clean
            
       - name: build and test
         run : mvn clean install
 
+      - name: Generate text report from JUnit XML
+        run: |
+          cat target/surefire-reports/*.xml > target/test-report.txt
+
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
-        if: success() || failure() 
         with:
-          report_paths: '**/build/test-results/test/TEST-*.xml' 
-      
-    
+          report_paths: target/surefire-reports/*.xml
+
+      - name: Update author
+        if: success()
+        run: echo ${{  env.GIT_COMMIT_AUTHOR_NAME  }} > AUTHOR
+
+      - name: Extract commit data
+        if: success()
+        uses: rlespinasse/git-commit-data-action@v1.x
+
+      - name: SUCCESSFUL TESTS - create Pull Request
+        if: success()
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automatized_Pull_Request
+          author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
+          commit-message: |
+            Functional version
+
+            the changes can be apllied to the main branch.
+
+      - name: Failed Tests
+        if: failure()
+        run: echo "core.error Tests were not satisfactory, non-functional version"

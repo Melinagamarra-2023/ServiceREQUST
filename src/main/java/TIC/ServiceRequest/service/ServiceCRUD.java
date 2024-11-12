@@ -6,16 +6,16 @@ import java.util.List;
 
 public interface ServiceCRUD<REQUEST, RESPONSE> {
 
-    RESPONSE save(REQUEST request) throws DataAccessException;
+    RESPONSE create(REQUEST request) throws DataAccessException;
 
     RESPONSE readOne(Long id) throws DataAccessException;
 
     List<RESPONSE> readAll() throws DataAccessException;
 
-    RESPONSE update(REQUEST request) throws DataAccessException;
+    RESPONSE update(String cuit, REQUEST request) throws DataAccessException;
 
-    RESPONSE disable(REQUEST request) throws DataAccessException;
+    RESPONSE disable(String cuit) throws DataAccessException;
 
-    RESPONSE enable(REQUEST request) throws DataAccessException;
+    RESPONSE enable(String cuit) throws DataAccessException;
 
 }
