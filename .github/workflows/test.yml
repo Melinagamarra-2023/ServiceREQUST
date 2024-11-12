@@ -53,11 +53,13 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           branch: automatized_Pull_Request
+          base: main
           author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
           commit-message: |
             Functional version
 
             the changes can be apllied to the main branch.
+          delete-branch: true
 
       - name: Failed Tests
         if: failure()
