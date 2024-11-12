@@ -43,7 +43,7 @@ public class DirectorController {
         response = this.service.create(request);
         URI uri = new URI("/api/directors/" + response.getCuit());
         logger.info("Director created");
-        return ResponseEntity.ok().headers(header(SUCCESFULL, "Director created")).location(uri).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, "Director created")).location(uri).body(response);
     }
 
     @GetMapping(value = CUIT)
@@ -55,7 +55,7 @@ public class DirectorController {
             return ResponseEntity.badRequest().headers(header(NOT_FOUND, notFoundDescription(cuit))).body(null);
         }
         correctlySearch();
-        return ResponseEntity.ok().headers(header(SUCCESFULL, FOUND)).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, FOUND)).body(response);
     }
 
     @GetMapping(value = "/{cuise}")
@@ -68,7 +68,7 @@ public class DirectorController {
                     .headers(header(NOT_FOUND, "There are no directors in the Institute")).body(null);
         }
         correctlySearch();
-        return ResponseEntity.ok().headers(header(SUCCESFULL, FOUND)).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, FOUND)).body(response);
     }
 
     @GetMapping(value = "")
@@ -81,7 +81,7 @@ public class DirectorController {
                     .headers(header(NOT_FOUND,"There are no directors in the database")).body(null);
         }
         correctlySearch();
-        return ResponseEntity.ok().headers(header(SUCCESFULL, FOUND)).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, FOUND)).body(response);
     }
 
     @PutMapping(value = CUIT)
@@ -95,7 +95,7 @@ public class DirectorController {
         }
         DirectorDTO response = service.update(cuit, newDirector);
         logger.info("Director updated");
-        return ResponseEntity.ok().headers(header(SUCCESFULL, "Director updated")).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, "Director updated")).body(response);
     }
 
     @DeleteMapping(value = CUIT)
@@ -111,7 +111,7 @@ public class DirectorController {
         }
         DirectorDTO response = service.disable(cuit);
         logger.info("Director disabled");
-        return ResponseEntity.ok().headers(header(SUCCESFULL, "Director disabled")).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, "Director disabled")).body(response);
     }
 
     @PatchMapping(value = CUIT)
@@ -127,7 +127,7 @@ public class DirectorController {
         }
         DirectorDTO response = service.enable(cuit);
         logger.info("Director enabled");
-        return ResponseEntity.ok().headers(header(SUCCESFULL, "Director enabled")).body(response);
+        return ResponseEntity.ok().headers(header(SUCCESSFULL, "Director enabled")).body(response);
     }
 
     private void correctlySearch() {
