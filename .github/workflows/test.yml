@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  checks: write
 
 jobs:
   build:
@@ -52,7 +53,6 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           branch: automatized_Pull_Request
-          token: ${{  secrets.PAT_TOKEN  }}
           author: ${{  env.GIT_COMMIT_AUTHOR_NAME }} <${{  env.GIT_COMMIT_AUTHOR_EMAIL  }}">
           commit-message: |
             Functional version
