@@ -1,6 +1,5 @@
 package TIC.ServiceRequest.service.impl;
 
-import TIC.ServiceRequest.dto.ScheduleRequest;
 import TIC.ServiceRequest.dto.TechSupportDTO;
 import TIC.ServiceRequest.model.*;
 import TIC.ServiceRequest.repository.InstituteRepository;
@@ -8,6 +7,7 @@ import TIC.ServiceRequest.repository.LogRepository;
 import TIC.ServiceRequest.repository.TechSupportRepository;
 import TIC.ServiceRequest.repository.TechnicianRepository;
 import TIC.ServiceRequest.service.TechSupportService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 
 import static TIC.ServiceRequest.constant.TechSupportConstants.*;
 
@@ -78,7 +79,7 @@ public class TechSupportServiceImpl implements TechSupportService {
 
     @Override
     @Transactional
-    public TechSupportDTO scheduleService(GregorianCalendar date, ScheduleRequest request) {
+    public TechSupportDTO scheduleService(GregorianCalendar date, TechSupportDTO request) {
         TechSupportDTO response = new TechSupportDTO();
         try {
             TechSupport techSupport = findByCode(request.getCode());
@@ -106,45 +107,46 @@ public class TechSupportServiceImpl implements TechSupportService {
 
 
     @Override
-    public TechSupportDTO acceptTechnician(String code) {
-        try {
-            TechSupport techSupport = findByCode(code);
+    public TechSupportDTO acceptTechnician(Long id) {
+
+            Optional<TechSupport>techSupportOptional = repository.findById(id);
+            TechSupport techSupport = techSupportOptional.orElseThrow(()->{
+                String message = PRESENCE_ERROR_MESSAGE + id;
+                return new EntityNotFoundException(message);
+            });
             TechSupportDTO response = toDTO(repository.save(techSupport));
             newLog(techSupport, State.PRESENTE);
             logger.info(PRESENCE_CONFIRMATION_MESSAGE + "{}", techSupport.getCode());
             return response;
-        } catch (Exception e) {
-            logger.error(PRESENCE_ERROR_MESSAGE);
-            return null;
-        }
     }
 
     @Override
-    public TechSupportDTO acceptDirector(String code) {
-        try {
-            TechSupport techSupport = findByCode(code);
+    public TechSupportDTO acceptDirector(Long id) {
+
+        Optional<TechSupport>techSupportOptional = repository.findById(id);
+        TechSupport techSupport = techSupportOptional.orElseThrow(()->{
+            String message = JOB_ERROR_MESSAGE + id;
+            return new EntityNotFoundException(message);
+        });
             TechSupportDTO response = toDTO(repository.save(techSupport));
             newLog(techSupport, State.TERMINADO);
             logger.info(JOB_CONFIRMATION_MESSAGE + "{}", techSupport.getCode());
             return response;
-        } catch (Exception e) {
-            logger.info(JOB_ERROR_MESSAGE);
-            return null;
-        }
+
     }
 
     @Override
-    public TechSupportDTO cenceledService(String code) {
-        try {
-            TechSupport techSupport = findByCode(code);
+    public TechSupportDTO cenceledService(Long id) {
+        Optional<TechSupport>techSupportOptional = repository.findById(id);
+        TechSupport techSupport = techSupportOptional.orElseThrow(()->{
+            String message = JOB_ERROR_CANCELED + id;
+            return new EntityNotFoundException(message);
+        });
             newLog(techSupport, State.CANCELADO);
             TechSupportDTO response = toDTO(repository.save(techSupport));
             logger.info(JOB_CANCELED + "{}", techSupport.getCode());
             return response;
-        } catch (Exception e) {
-            logger.error(JOB_ERROR_CANCELED);
-            return null;
-        }
+
     }
 
 
@@ -162,7 +164,7 @@ public class TechSupportServiceImpl implements TechSupportService {
         newTech.setInstitute(techSupport.getInstitute());
         newTech.setType(techSupport.getType().name());
         if(techSupport.getDate() != null){
-            newTech.setDate(techSupport.getDate().getTime().toString());
+            newTech.setDate(techSupport.getDate());
         }
 
         return newTech;

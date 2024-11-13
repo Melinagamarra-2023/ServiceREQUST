@@ -5,22 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="institute")
+@Table(name = "institute")
 public class Institute {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(unique = true)
-    String cuise;
+    private String cuise;
 
-    String domain;
-    String phone;
-    String mail;
-    Boolean enabled;
+    private String domain;
+    private String phone;
+    private String mail;
+    private Boolean enabled;
+    @OneToMany(mappedBy = "institute")
+    private List<Technician> technicians;
+
 }

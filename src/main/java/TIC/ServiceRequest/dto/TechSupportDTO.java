@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.GregorianCalendar;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,8 @@ public class TechSupportDTO {
     long id;
     private String code;
     private Institute institute;
-    private String date;
+    private GregorianCalendar date;
     private String type;
     private String prueba;
+    private String cuit;
 }
