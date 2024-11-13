@@ -1,6 +1,5 @@
 package TIC.ServiceRequest.controller;
 
-import TIC.ServiceRequest.dto.ScheduleRequest;
 import TIC.ServiceRequest.dto.TechSupportDTO;
 import TIC.ServiceRequest.service.impl.TechSupportServiceImpl;
 import jakarta.validation.Valid;
@@ -32,21 +31,21 @@ public class techSupportController {
 
 
     @PostMapping("/schedule")
-    public ResponseEntity<TechSupportDTO> scheduleSupport(@Valid @RequestBody ScheduleRequest scheduleRequest){
-        return new ResponseEntity<>(this.service.scheduleService(scheduleRequest.getDate(),scheduleRequest),HttpStatus.CREATED);
+    public ResponseEntity<TechSupportDTO> scheduleSupport(@Valid @RequestBody TechSupportDTO techRequest){
+        return new ResponseEntity<>(this.service.scheduleService(techRequest.getDate(),techRequest),HttpStatus.CREATED);
     }
 
     @PostMapping("/acceptTechnician")
-    public ResponseEntity<TechSupportDTO> acceptTechnician (@Valid @RequestBody ScheduleRequest request) {
-        return new ResponseEntity<>(this.service.acceptTechnician(request.getCode()), HttpStatus.OK);
+    public ResponseEntity<TechSupportDTO> acceptTechnician (@PathVariable Long id) {
+        return new ResponseEntity<>(this.service.acceptTechnician(id), HttpStatus.OK);
     }
 
     @PostMapping("/acceptDirector")
-    public ResponseEntity<TechSupportDTO>acceptDirector(@Valid @RequestBody ScheduleRequest request){
-        return new ResponseEntity<>(this.service.acceptDirector(request.getCode()),HttpStatus.OK);
+    public ResponseEntity<TechSupportDTO>acceptDirector(@PathVariable Long id){
+        return new ResponseEntity<>(this.service.acceptDirector(id),HttpStatus.OK);
     }
     @PostMapping("/cenceledService")
-    public ResponseEntity<TechSupportDTO> cenceledService (@Valid @RequestBody ScheduleRequest request){
-        return new ResponseEntity<>(this.service.cenceledService(request.getCode()),HttpStatus.OK);
+    public ResponseEntity<TechSupportDTO> cenceledService (@PathVariable Long id){
+        return new ResponseEntity<>(this.service.cenceledService(id),HttpStatus.OK);
     }
 }

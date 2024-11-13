@@ -1,7 +1,5 @@
 package TIC.ServiceRequest.service;
 
-import TIC.ServiceRequest.dto.ScheduleRequest;
-
 import TIC.ServiceRequest.dto.TechSupportDTO;
 
 
@@ -12,11 +10,11 @@ public interface TechSupportService {
     TechSupportDTO requestService(TechSupportDTO requestTech);
 
 
-   TechSupportDTO scheduleService(GregorianCalendar date, ScheduleRequest request);
+   TechSupportDTO scheduleService(GregorianCalendar date, TechSupportDTO request);
 
-    TechSupportDTO acceptTechnician(String code);
-    TechSupportDTO acceptDirector(String code);
-    TechSupportDTO cenceledService(String code);
+    TechSupportDTO acceptTechnician(Long id);
+    TechSupportDTO acceptDirector(Long id);
+    TechSupportDTO cenceledService(Long id);
 
 
 }

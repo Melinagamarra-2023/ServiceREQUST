@@ -9,23 +9,24 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="technicians")
+@Table(name = "technicians")
 public class Technician {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(unique = true)
     String cuit;
 
     @ManyToOne
+    @JoinColumn(name = "institute_id")
     private Institute institute;
 
-    String name;
-    String lastname;
-    String phone;
-    String mail;
-    Boolean enabled;
+    private String name;
+    private String lastname;
+    private String phone;
+    private String mail;
+    private Boolean enabled;
 
 }
