@@ -1,5 +1,6 @@
 package TIC.ServiceRequest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class TechSupport {
     @ManyToOne
     @JoinColumn(name = "institute_id")
     private Institute institute;
+
     private SupportType type;
     private GregorianCalendar date;
     @OneToMany

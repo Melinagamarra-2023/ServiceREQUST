@@ -37,6 +37,7 @@ public class TechSupportServiceImpl implements TechSupportService {
         this.instituteRepository = instituteRepository;
         this.technicianRepository = technicianRepository;
         technicians = new ArrayList<>();
+
     }
 
     @Override
@@ -171,6 +172,9 @@ public class TechSupportServiceImpl implements TechSupportService {
     }
 
     private void newLog(TechSupport techSupport, State state) {
+        if (techSupport.getLogs() == null) {
+            techSupport.setLogs(new ArrayList<>());
+        }
         Log newLog = new Log();
         newLog.setTechSupport(techSupport);
         newLog.setDate(new GregorianCalendar());

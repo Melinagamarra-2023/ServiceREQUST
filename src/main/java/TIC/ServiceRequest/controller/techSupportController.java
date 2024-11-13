@@ -25,26 +25,26 @@ public class techSupportController {
     }
 
     @PostMapping("/support")
-    public ResponseEntity<TechSupportDTO> createSupport(@Valid @RequestBody TechSupportDTO techRequest) {
+    public ResponseEntity<TechSupportDTO> createSupport( @RequestBody TechSupportDTO techRequest) {
         return new ResponseEntity<>(this.service.requestService(techRequest), HttpStatus.CREATED);
     }
 
 
     @PostMapping("/schedule")
-    public ResponseEntity<TechSupportDTO> scheduleSupport(@Valid @RequestBody TechSupportDTO techRequest){
+    public ResponseEntity<TechSupportDTO> scheduleSupport(@RequestBody TechSupportDTO techRequest){
         return new ResponseEntity<>(this.service.scheduleService(techRequest.getDate(),techRequest),HttpStatus.CREATED);
     }
 
-    @PostMapping("/acceptTechnician")
+    @PostMapping("/acceptTechnician/{id}")
     public ResponseEntity<TechSupportDTO> acceptTechnician (@PathVariable Long id) {
         return new ResponseEntity<>(this.service.acceptTechnician(id), HttpStatus.OK);
     }
 
-    @PostMapping("/acceptDirector")
+    @PostMapping("/acceptDirector/{id}")
     public ResponseEntity<TechSupportDTO>acceptDirector(@PathVariable Long id){
         return new ResponseEntity<>(this.service.acceptDirector(id),HttpStatus.OK);
     }
-    @PostMapping("/cenceledService")
+    @PostMapping("/cenceledService/{id}")
     public ResponseEntity<TechSupportDTO> cenceledService (@PathVariable Long id){
         return new ResponseEntity<>(this.service.cenceledService(id),HttpStatus.OK);
     }
