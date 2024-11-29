@@ -1,11 +1,10 @@
 package TIC.ServiceRequest.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import TIC.ServiceRequest.model.Institute;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +18,7 @@ public class DirectorDTO {
     private String cuit;
 
     @NotNull
-    private Institute institute;
+    private String institute;
 
     private String name;
     private String lastname;

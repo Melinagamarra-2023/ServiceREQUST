@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 
+import TIC.ServiceRequest.repository.InstituteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import TIC.ServiceRequest.model.Director;
@@ -26,13 +27,16 @@ class DirectorServiceImplTest {
     @MockBean
     DirectorRepository repository;
 
+    @MockBean
+    InstituteRepository instituteRepository;
+
     @Autowired
     DirectorServiceImpl service;
 
     @BeforeEach
     void setUp() {
         repository = mock(DirectorRepository.class);
-        service = new DirectorServiceImpl(repository);
+        service = new DirectorServiceImpl(repository, instituteRepository);
         repositoryMock();
         createDirectors();
     }
@@ -217,8 +221,8 @@ class DirectorServiceImplTest {
         director2.setInstitute(institute2);
         director3.setInstitute(institute3);
         director4.setInstitute(institute2);
-        directorDTO1.setInstitute(institute1);
-        directorDTO2.setInstitute(institute3);
+        directorDTO1.setInstitute(institute1.getCuise());
+        directorDTO2.setInstitute(institute3.getCuise());
         //
         directors.add(director1);
         directors.add(director2);

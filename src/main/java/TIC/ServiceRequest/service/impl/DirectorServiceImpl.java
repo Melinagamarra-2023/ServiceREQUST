@@ -1,19 +1,19 @@
 package TIC.ServiceRequest.service.impl;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
 import TIC.ServiceRequest.model.Director;
 import TIC.ServiceRequest.dto.DirectorDTO;
+import TIC.ServiceRequest.model.Institute;
 import org.springframework.stereotype.Service;
 import TIC.ServiceRequest.service.DirectorService;
 import org.springframework.dao.DataAccessException;
 import TIC.ServiceRequest.repository.DirectorRepository;
+import TIC.ServiceRequest.repository.InstituteRepository;
 
 import static TIC.ServiceRequest.constant.DirectorConstants.*;
 
@@ -21,11 +21,13 @@ import static TIC.ServiceRequest.constant.DirectorConstants.*;
 @Service
 public class DirectorServiceImpl implements DirectorService {
 
-    DirectorRepository repository;
+    DirectorRepository directorRepository;
+    InstituteRepository instituteRepository;
     protected static final Logger logger = LoggerFactory.getLogger(DirectorServiceImpl.class);
 
-    public DirectorServiceImpl(DirectorRepository directorRepository) {
-        repository = directorRepository;
+    public DirectorServiceImpl(DirectorRepository directorRepository, InstituteRepository instituteRepository) {
+        this.directorRepository = directorRepository;
+        this.instituteRepository = instituteRepository;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class DirectorServiceImpl implements DirectorService {
             } else if (director.getCuit().isBlank()) {
                 throw new Exception("No se permite cuit vacio");
             }
-            return toDTO(repository.save(newDirector));
+            return toDTO(directorRepository.save(newDirector));
         } catch (Exception e) {
             logger.error("No se ha podido guardar el directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
@@ -50,7 +52,7 @@ public class DirectorServiceImpl implements DirectorService {
     public DirectorDTO readOne(Long id) throws DataAccessException {
         try {
             logger.info("Buscando directivo bajo el ID: {}", id);
-            return toDTO(repository.findById(id).orElseThrow());
+            return toDTO(directorRepository.findById(id).orElseThrow());
         } catch (Exception e) {
             searchError(e);
         }
@@ -60,7 +62,7 @@ public class DirectorServiceImpl implements DirectorService {
     public DirectorDTO readByCuit(String cuit) throws DataAccessException {
         try {
             logger.info("Buscando directivo bajo el CUIT: {}", cuit);
-            List<Director> directors = repository.findAll();
+            List<Director> directors = directorRepository.findAll();
             return toDTO(directors.stream()
                     .filter(director -> director.getCuit().equals(cuit)).findFirst().orElseThrow());
         } catch (Exception e) {
@@ -73,7 +75,7 @@ public class DirectorServiceImpl implements DirectorService {
         try {
             List<DirectorDTO> response = new ArrayList<>();
             logger.info("Buscando todos los directivos pertenecientes a una Institución determinada");
-            for (Director director : repository.findAll()) {
+            for (Director director : directorRepository.findAll()) {
                 if (director.getInstitute().getCuise().equals(instituteCuise)) {
                     response.add(toDTO(director));
                 }
@@ -90,7 +92,7 @@ public class DirectorServiceImpl implements DirectorService {
         try {
             List<DirectorDTO> response = new ArrayList<>();
             logger.info("Buscando todos los directivos");
-            for (Director director : repository.findAll()) {
+            for (Director director : directorRepository.findAll()) {
                 response.add(toDTO(director));
             }
             return response;
@@ -114,7 +116,7 @@ public class DirectorServiceImpl implements DirectorService {
             oldDirector.setLastname(newDirector.getLastname());
             oldDirector.setPhone(newDirector.getPhone());
             oldDirector.setMail(newDirector.getMail());
-            return toDTO(repository.save(oldDirector));
+            return toDTO(directorRepository.save(oldDirector));
         } catch (Exception e) {
             logger.error("No se ha podido actulizar al directivo {}. Error: {}", director.getCuit(), e.getMessage());
         }
@@ -129,8 +131,8 @@ public class DirectorServiceImpl implements DirectorService {
             if (Boolean.FALSE.equals(entity.getEnabled())) {
                 throw new Exception("Directivo ya deshabilitado.");
             }
-            repository.save(entity).setEnabled(false);
-            return toDTO(repository.save(entity));
+            directorRepository.save(entity).setEnabled(false);
+            return toDTO(directorRepository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido eliminar al directivo {}. Error {}", cuit, e.getMessage());
         }
@@ -145,10 +147,19 @@ public class DirectorServiceImpl implements DirectorService {
             if (Boolean.TRUE.equals(entity.getEnabled())) {
                 throw new Exception("Directivo ya Habilitado.");
             }
-            repository.save(entity).setEnabled(true);
-            return toDTO(repository.save(entity));
+            directorRepository.save(entity).setEnabled(true);
+            return toDTO(directorRepository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido habilitar al directivo {}. Error {}", cuit, e.getMessage());
+        }
+        return null;
+    }
+
+    private Institute verifyInstitute(String cuise) {
+        for (Institute institute : instituteRepository.findAll()) {
+            if (institute.getCuise().equals(cuise)) {
+                return institute;
+            }
         }
         return null;
     }
@@ -158,7 +169,7 @@ public class DirectorServiceImpl implements DirectorService {
         Director entity = new Director();
         entity.setId(dto.getId());
         entity.setCuit(dto.getCuit());
-        entity.setInstitute(dto.getInstitute());
+        entity.setInstitute(verifyInstitute(dto.getInstitute()));
         entity.setName(dto.getName());
         entity.setLastname(dto.getLastname());
         entity.setPhone(dto.getPhone());
@@ -172,7 +183,7 @@ public class DirectorServiceImpl implements DirectorService {
         DirectorDTO dto = new DirectorDTO();
         dto.setId(director.getId());
         dto.setCuit(director.getCuit());
-        dto.setInstitute(director.getInstitute());
+        dto.setInstitute(director.getInstitute().getCuise());
         dto.setName(director.getName());
         dto.setLastname(director.getLastname());
         dto.setPhone(director.getPhone());
