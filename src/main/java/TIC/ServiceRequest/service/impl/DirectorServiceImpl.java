@@ -131,7 +131,7 @@ public class DirectorServiceImpl implements DirectorService {
             if (Boolean.FALSE.equals(entity.getEnabled())) {
                 throw new Exception("Directivo ya deshabilitado.");
             }
-            directorRepository.save(entity).setEnabled(false);
+            entity.setEnabled(false);
             return toDTO(directorRepository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido eliminar al directivo {}. Error {}", cuit, e.getMessage());
@@ -147,7 +147,7 @@ public class DirectorServiceImpl implements DirectorService {
             if (Boolean.TRUE.equals(entity.getEnabled())) {
                 throw new Exception("Directivo ya Habilitado.");
             }
-            directorRepository.save(entity).setEnabled(true);
+            entity.setEnabled(true);
             return toDTO(directorRepository.save(entity));
         } catch (Exception e) {
             logger.error("No se ha podido habilitar al directivo {}. Error {}", cuit, e.getMessage());
