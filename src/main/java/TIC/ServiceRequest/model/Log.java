@@ -1,5 +1,6 @@
 package TIC.ServiceRequest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +23,6 @@ public class Log {
     private State state;
     @ManyToOne
     @JoinColumn(name = "tech_support_id")
+    @JsonBackReference
     private TechSupport techSupport;
 }

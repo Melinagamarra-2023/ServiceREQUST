@@ -27,6 +27,7 @@ public class Institute {
     private String mail;
     private Boolean enabled;
     @OneToMany(mappedBy = "institute")
+    @JsonManagedReference
     private List<Technician> technicians;
 
 }
